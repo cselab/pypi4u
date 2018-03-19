@@ -19,7 +19,7 @@ The covariance matrix adaptation evolution strategy (CMA-ES) implementation requ
 The following section explains the underlying structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
 
 ### Common Parameters
-Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below:
+Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below. It consists of three sections, the model, priors and log-likelihood. 
 
 ```
 [MODEL]
@@ -42,7 +42,7 @@ error_prior = uniform 0 2
 error = constant
 ```
 
-It consists of three sections, the model, priors and log-likelihood. In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters, are the parameters that are to be predicted. For example if the model function is the following: 
+* **[MODEL]** - In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters, are the parameters that are to be predicted. For example if the model function is the following: 
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
@@ -69,7 +69,7 @@ x_0 = 5 5 5 5 #starting point, initial guess for the theta vector
 sigma_0 = 5 #initial standard deviation
 ```
 
-These specific parameters can be interpreted as following
+These specific parameters can be interpreted as following:
 * **Bounds** - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
 * **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The standard deviation introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. x_0 forms the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
 * **sigma_0** - defines the initial standard deviation used by CMA-ES alogrithm when making its initial guesses. 
@@ -83,7 +83,7 @@ After having filled in the parameter files, the estimators for the model paramet
 ### Generation of Synthetic Data
 Synthetic data was generated from a predefined model function:
 
-![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Cthetat_3%29%3Dt%5Ccdot%5Ctheta_2%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_1%5Ccdot%5Csin%28t%29) 
+![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
 The model parameters were set equal to
 
