@@ -4,7 +4,7 @@ pypi4u is a python based project that provides a TMCMC and covariance matrix ada
 
 ![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
-The TMCMC implemenation directly generates samples from the probability function using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. 
+The TMCMC implementation directly generates samples from the probability function using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. 
 
 
 ## Getting Started
