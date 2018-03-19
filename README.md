@@ -4,7 +4,7 @@ pypi4u is a python based project that provides a TMCMC and covariance matrix ada
 
 ![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
-The TMCMC implementation directly generates samples from the probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
+The TMCMC implementation directly generates samples from the above probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
 
 ## Getting Started
 The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7. Furthermore, the following python packages need to be installed: 
@@ -72,14 +72,16 @@ sigma_0 = 5 #initial standard deviation
 ```
 
 These specific parameters can be interpreted as following
-* Bounds 
+* **Bounds** - defines the upper and lower bound for the estimators. Therefore, all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
+* **x_0** - this is a vector consisting of the initial guesses of the estimators. The vector size exceeds the number of model parameters by one, as the standard deviation introduced by the noise also has to be approximated.  It forms the starting point of the CMA-ES algorithm. Ultimately the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
+* **sigma_0** - defines the initial standard deviation used by the CMA-ES alogrithm
 
 
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
 ## Example Problem - DEMO 
 
-### Generation of Synthetic Data 
+### Generation of Synthetic Data
 Synthetic data was generated from a predefined model function:
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Cthetat_3%29%3Dt%5Ccdot%5Ctheta_2%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_1%5Ccdot%5Csin%28t%29) 
@@ -101,8 +103,6 @@ where epsilon equates to
 ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
 
  Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton *f* to approximate the values of the thetas and epsilon. 
-
-
 
 
 
