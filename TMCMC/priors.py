@@ -1,3 +1,15 @@
+# *
+# *  priors.py
+# *  PyPi4U
+# *
+# *  Authors:
+# *     Philipp Mueller  - muellphi@ethz.ch
+# *     Georgios Arampatzis - arampatzis@collegium.ethz.ch
+# *     Panagiotis Chatzidoukas
+# *  Copyright 2018 ETH Zurich. All rights reserved.
+# *
+
+
 from random_auxiliary import uniformrand
 from math import log
 from scipy import optimize, random, stats

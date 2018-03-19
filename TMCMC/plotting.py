@@ -1,3 +1,15 @@
+# *
+# *  plotting.py
+# *  PyPi4U
+# *
+# *  Authors:
+# *     Philipp Mueller  - muellphi@ethz.ch
+# *     Georgios Arampatzis - arampatzis@collegium.ethz.ch
+# *     Panagiotis Chatzidoukas
+# *  Copyright 2018 ETH Zurich. All rights reserved.
+# *
+
+
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
@@ -39,7 +51,7 @@ def plot_upper_triangle(ax, theta, lik=None):
     for i in range(theta.shape[1]):
         for j in range(i + 1, theta.shape[1]):
             if lik is None:
-                ax[i, j].plot(theta[:, j], theta[:, i], '.', markersize=0.5)
+                ax[i, j].plot(theta[:, j], theta[:, i], '.', markersize=1)
             else:
                 ax[i, j].scatter(theta[:, j], theta[:, i], marker='o', s=10,
                                  c=lik, facecolors='none', alpha=0.5)
@@ -52,13 +64,14 @@ def plot_lower_triangle(ax, theta):
     for i in range(theta.shape[1]):
         for j in range(i):
             # returns bin values, bin edges and bin edges
-            H, xe, ye = np.histogram2d(theta[:, j], theta[:, i], 20,
+            H, xe, ye = np.histogram2d(theta[:, j], theta[:, i], 8,
                                        normed=True)
             # plot and interpolate data
-            ax[i, j].imshow(H.T, aspect="auto", interpolation='bicubic',
+            ax[i, j].imshow(H.T, aspect="auto", interpolation='spline16',
                             origin='lower', extent=np.hstack((
                                                 ax[j, j].get_xlim(),
-                                                ax[i, i].get_xlim())))
+                                                ax[i, i].get_xlim())),
+                                                cmap=plt.get_cmap('jet'))
             if i < theta.shape[1]-1:
                 ax[i, j].set_xticklabels([])
             if j > 0:
@@ -74,7 +87,7 @@ def plot_theta(file, likelihood=False):
     else:
         plot_upper_triangle(ax, theta[:, :-1])
     plot_lower_triangle(ax, theta[:, :-1])
-    plt.jet()
+#    plt.jet()
     plt.tight_layout()
     plt.show()
 
