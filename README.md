@@ -51,7 +51,6 @@ where epsilon equates to
 
 
 
-richard stahl ist ein held
 
 
 
