@@ -57,10 +57,9 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 
 Finally the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions with noise).
 
-**[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform and are assigned by P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]
+**[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the paramter file P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]. 
 
-**[log-likelihood]** - In this section the 
-
+**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
 
 ### CMA Parameters
 Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
