@@ -8,9 +8,9 @@ The TMCMC implementation directly generates samples from the probability functio
 
 
 ## Getting Started
-The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7 to be installed on the machine. Additionally, the following python packages need to be installed: 
+The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7 to be installed. Additionally, the following python packages need to be installed: 
 
-* cma 2.5.3 https://pypi.python.org/pypi/cma
+* cma 2.5.3 - https://pypi.python.org/pypi/cma
 * numpy
 * ConfigParser
 * matplotlib
@@ -41,7 +41,11 @@ The function was then evaluated for
 
 ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D)
 
-The epsilon introduces random noise to the data set that is normally distributed and has a standard devation of one. Consequently, all obtained function evaluations are independently and identically distributed. 
+The epsilon introduces random noise to the data set that is normally distributed and has a standard devation of one. Consequently, all obtained function evaluations are independently and identically distributed. The synthetic data is stored in a text document `data.txt`, which lists the input value t and the corresponding function value f.
+
+
+
+
 
 
 
