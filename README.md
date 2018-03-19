@@ -4,8 +4,7 @@ pypi4u is a python based project that provides a TMCMC and covariance matrix ada
 
 ![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
-The TMCMC implementation directly generates samples from the probability function using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochasitc mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
-
+The TMCMC implementation directly generates samples from the probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochasitc mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
 
 ## Getting Started
 The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7. Furthermore, the following python packages need to be installed: 
@@ -15,10 +14,6 @@ The covariance matrix adaptation evolution strategy (CMA-ES) implementation requ
 * ConfigParser
 * matplotlib
 * importlib
-
-## Example - DEMO 
-The following demo 
-
 
 ## How it Works
 The following section explains the underlying structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
@@ -65,7 +60,16 @@ Finally the data file is a text file that contains a list of input values and co
 
 
 ### CMA Parameters
+Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
 
+```
+[PARAMETERS]
+#defining the parameters for CMA 
+
+bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
+x_0 = 5 5 5 5 #starting point, initial guess for the theta vector 
+sigma_0 = 5 #initial standard deviation
+```
 
 
 ## Example Problem - DEMO 
