@@ -45,9 +45,7 @@ error = constant
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be equated to path to the python script, that contains the function definition corresponding to the model function.
-
-Finally the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions with noise).
+The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to path of the python script, that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions with noise).
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the paramter file P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]. 
 
@@ -95,7 +93,7 @@ MaxIter = 1000
 ```
 
 ### Model Function
-The model function needs to be defined by the user. It should be a method that takes two arguments, an estimator vector and *t*, and returns a float. For example: 
+The model function needs to be defined by the user. It is a method that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
 
 ```
 import math
@@ -106,7 +104,7 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 
 
 ### Data File
-
+The user needs to append a data file. This data file should be a text file that contains two columns, delimted by a space. The first column should be the value of the independent variable [*t*], while the second column should be corresponding function evaluation/measurement [*function evaluation*]. 
 
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
