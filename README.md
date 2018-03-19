@@ -43,9 +43,7 @@ error = constant
 ```
 
 * **[MODEL]** - In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters, are the parameters that are to be predicted. For example if the model function is the following: 
-
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
-
 The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3). The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
 
 ```
