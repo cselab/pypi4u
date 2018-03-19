@@ -23,8 +23,8 @@ The following demo
 ## How it Works
 The following section explains the structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
 
-## Common Parameters
-Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, 
+### Common Parameters
+Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem, such as the *number of model parameters* that need to be approximated or the location of the *data file*. The structure of the common parameter file is depicted below:
 
 ```
 [MODEL]
@@ -47,6 +47,11 @@ error_prior = uniform 0 2
 error = constant
 ```
 
+It consists of three sections, the model, prior and log-likelihood. In the model section 
+
+The model file consists of a python script, that solely contains the function definition corresponding to the model function. 
+
+
 ### Generation of Synthetic Data 
 Synthetic data was generated from a predefined model function:
 
@@ -68,7 +73,7 @@ where epsilon equates to
 
 ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
 
- Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton f to approximate the values of the thetas and epsilon. 
+ Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton *f* to approximate the values of the thetas and epsilon. 
 
 
 
