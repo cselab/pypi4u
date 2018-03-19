@@ -24,7 +24,7 @@ The following demo
 The following section explains the structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
 
 ### Common Parameters
-Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem, such as the *number of model parameters* that need to be approximated or the location of the *data file*. The structure of the common parameter file is depicted below:
+Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below:
 
 ```
 [MODEL]
@@ -47,9 +47,20 @@ error_prior = uniform 0 2
 error = constant
 ```
 
-It consists of three sections, the model, prior and log-likelihood. In the model section 
+It consists of three sections, the model, prior and log-likelihood. In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function, in other words the parameters that should be predicted using the implementations. For example if the model function is the following: 
 
-The model file consists of a python script, that solely contains the function definition corresponding to the model function. 
+![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Cthetat_3%29%3Dt%5Ccdot%5Ctheta_2%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_1%5Ccdot%5Csin%28t%29) 
+
+The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3). The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
+
+```
+import math
+
+def model_function(theta, time): #evaluates my model function for a given theta and time
+	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
+
+```
+Finally the data file is a text file that contains a list of input values and corresponding output values (function evalutions).
 
 
 ### Generation of Synthetic Data 
