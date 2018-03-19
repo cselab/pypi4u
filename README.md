@@ -72,6 +72,8 @@ sigma_0 = 5 #initial standard deviation
 ```
 
 
+### Running the Code
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
 ## Example Problem - DEMO 
 
 ### Generation of Synthetic Data 
