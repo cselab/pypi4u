@@ -45,21 +45,13 @@ error = constant
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
-
-```
-import math
-
-def model_function(theta, time): #evaluates my model function for a given theta and time
-	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
-
-```
+The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be equated to path to the python script, that contains the function definition corresponding to the model function.
 
 Finally the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions with noise).
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the paramter file P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]. 
 
-**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
+**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
 
 ### CMA Parameters
 Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
@@ -75,7 +67,7 @@ sigma_0 = 5 #initial standard deviation
 
 These specific parameters can be interpreted as following:
 * **Bounds** - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
-* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The standard deviation introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. x_0 forms the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
+* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The standard deviation introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. x_0 forms the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
 * **sigma_0** - defines the initial standard deviation used by CMA-ES alogrithm when making its initial guesses. 
 
 
@@ -101,6 +93,20 @@ max_stages = 10000
 seed = -1
 MaxIter = 1000
 ```
+
+### Model Function
+The model function needs to be defined by the user. It should be a method that takes two arguments, an estimator vector and *t*, and returns a float. For example: 
+
+```
+import math
+
+def model_function(theta, time): #evaluates my model function for a given theta and time
+	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
+```
+
+
+### Data File
+
 
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
