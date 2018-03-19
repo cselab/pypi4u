@@ -21,7 +21,7 @@ The following demo
 
 
 ## How it Works
-The following section explains the structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
+The following section explains the underlying structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
 
 ### Common Parameters
 Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below:
@@ -47,7 +47,7 @@ error_prior = uniform 0 2
 error = constant
 ```
 
-It consists of three sections, the model, prior and log-likelihood. In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function, in other words the parameters that should be predicted using the implementations. For example if the model function is the following: 
+It consists of three sections, the model, priors and log-likelihood. In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters, are the parameters that are to be predicted. For example if the model function is the following: 
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Cthetat_3%29%3Dt%5Ccdot%5Ctheta_2%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_1%5Ccdot%5Csin%28t%29) 
 
@@ -62,6 +62,13 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 ```
 Finally the data file is a text file that contains a list of input values and corresponding output values (function evalutions).
 
+
+
+### CMA Parameters
+
+
+
+## Example Problem - DEMO 
 
 ### Generation of Synthetic Data 
 Synthetic data was generated from a predefined model function:
