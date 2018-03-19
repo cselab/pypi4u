@@ -23,7 +23,6 @@ Both implementations access a common paramter file, named `common_parameters.par
 
 ```
 [MODEL]
-
 Number of model parameters = 3
 model file = model_function.py
 data file = data.txt 
@@ -48,7 +47,7 @@ error = constant
 
 The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3). The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
 
-**[PRIORS]** - In this section the user is able to set the prior probability density functions. The prior probability distribution functions can either be normal or uniform. 
+**[PRIORS]** - In this section the user is able to set the prior probability density functions. The prior probability distribution functions can either be normal or uniform. In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
 
 **[log-likelihood]** - In this section the 
 
@@ -80,6 +79,29 @@ These specific parameters can be interpreted as following:
 * **sigma_0** - defines the initial standard deviation used by CMA-ES alogrithm when making its initial guesses. 
 
 
+### TMCMC Parameters
+
+```
+[SIMULATION SETTINGS]
+pop_size = 10000
+bbeta = 0.04
+tol_COV = 1
+BURN_IN = 20
+# max_stages = 100
+#seed = -1
+
+[optimization settings]
+# OPTIONAL
+#max_stages
+#
+
+#Either here or in an additional default settings file
+[DEFAULT]
+max_stages = 10000
+seed = -1
+MaxIter = 1000
+```
+
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
 
@@ -98,7 +120,7 @@ The function was then evaluated for
 
 ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D)
 
-Additionally, random noise is introduced by simply adding epsilon to the function evaluations.T The sum of the terms forms 
+Additionally, random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms 
 
 ![equation](http://latex.codecogs.com/gif.latex?y_i%20%3D%20f%28t_i%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29&plus;%5Cvarepsilon)
 
