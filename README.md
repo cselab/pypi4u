@@ -37,13 +37,9 @@ and epsilon was equated to
 
 The function was then evaluated for
 
-![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
-
-
-
-
 ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D).
-The epsilon introduces random noise to the data set. Consequently, all obtained function evaluations are independently and identically distributed 
+
+The epsilon introduces random noise to the data set that is normally distributed and has a standard devation of one. Consequently, all obtained function evaluations are independently and identically distributed. 
 
 
 
