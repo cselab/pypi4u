@@ -2,7 +2,9 @@
 
 pypi4u is a python based project that provides a TMCMC and covariance matrix adaptation evolution strategy implementation (CMA-ES) to uncertainty quantification and parameter estimation. The CMA-ES implementation uses the covariance matrix adaptation evolution strategy to determine the maximum of the posterior probability distribution, which is defined as following: 
 
+![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
+The TMCMC implemenation directly generates samples from the probability function using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. 
 
 
 ## Getting Started
@@ -37,7 +39,7 @@ and epsilon was equated to
 
 The function was then evaluated for
 
-![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D).
+![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D)
 
 The epsilon introduces random noise to the data set that is normally distributed and has a standard devation of one. Consequently, all obtained function evaluations are independently and identically distributed. 
 
