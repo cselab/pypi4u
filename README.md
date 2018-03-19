@@ -72,9 +72,9 @@ sigma_0 = 5 #initial standard deviation
 ```
 
 These specific parameters can be interpreted as following
-* **Bounds** - defines the upper and lower bound for the estimators. Therefore, all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
-* **x_0** - this is a vector consisting of the initial guesses of the estimators. The vector size exceeds the number of model parameters by one, as the standard deviation introduced by the noise also has to be approximated.  It forms the starting point of the CMA-ES algorithm. Ultimately the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
-* **sigma_0** - defines the initial standard deviation used by the CMA-ES alogrithm
+* **Bounds** - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
+* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The standard deviation introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5Cmu%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. x_0 forms the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
+* **sigma_0** - defines the initial standard deviation used by CMA-ES alogrithm when making its initial guesses. 
 
 
 ### Executing the Code
