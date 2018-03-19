@@ -19,7 +19,7 @@ The covariance matrix adaptation evolution strategy (CMA-ES) implementation requ
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
 ### Common Parameters
-Both implementations access a common paramter file, named `common_parameters.par`, which forms the project's foundation. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below. It consists of three sections, the model, priors and log-likelihood. 
+Both the CMA-ES and TMCMC implementation access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
 
 ```
 [MODEL]
