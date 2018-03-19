@@ -8,7 +8,6 @@ data file = data.txt
 # Set prior distribution
 # prior distributions uniform normal
 
-
 P1 = normal 4 2
 P2 = normal 1 2
 P3 = uniform 0 5

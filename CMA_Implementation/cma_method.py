@@ -1,3 +1,15 @@
+'''	*
+ 	*  cma_method.py
+ 	*  pypi4u
+ 	*
+ 	*  Created by Paul Aurel Diederichs on 01/01/18.
+ 	*  Copyright 2018 ETH Zurich. All rights reserved.
+	*
+ 	*'''
+
+
+
+
 import ConfigParser 
 import importlib
 import math
@@ -47,14 +59,14 @@ def maximum_likelihood_func_ln(y, time_mesh, estimators, error_type, prior_set, 
 def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename):
 	es = cma.CMAEvolutionStrategy(x_0, sigma_0, {'bounds': [lower_bound, upper_bound]}) #optim instance is generated with starting point x0 = (0)^T and initial standard deviation sigma0 = 1
 	while not es.stop(): #iterate
-		solutions = es.ask() #ask delivers new candidate solutions, solutions is a list or array of candidate solution points
-		es.tell(solutions, [-1*maximum_likelihood_func_ln(y_data, t_data, i, error_type, prior_set,model_filename) for i in solutions]) #tell updates the optim instance by passing the respective function values
+		estiomators = es.ask() #ask delivers new candidate estimatior, estimators is a list or array of candidate estimator points
+		es.tell(estiomators, [-1*maximum_likelihood_func_ln(y_data, t_data, estimator, error_type, prior_set,model_filename) for estimator in estiomators]) #tell updates the optim instance by passing the respective function values
 		es.logger.add() #append some logging data from CMAEvolutionStrategy class instance es
 		es.disp() #displays selected data from the class 
 
 
 	res = es.result
-	np.savetxt("estimators.txt", res[0][:], newline='\n')
+	np.savetxt("CMA_estimators.txt", res[0][:], newline='\n')
 
 	es.result_pretty() #print results 
 	es.logger.plot() #plots the results 
