@@ -47,11 +47,6 @@ error = constant
 
 The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3). The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
 
-**[PRIORS]** - In this section the user is able to set the prior probability density functions. The prior probability distribution functions can either be normal or uniform. In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
-
-**[log-likelihood]** - In this section the 
-
-
 ```
 import math
 
@@ -59,7 +54,13 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 
 ```
+
 Finally the data file is a text file that contains a list of input values and corresponding output values (function evalutions).
+
+**[PRIORS]** - In this section the user is able to set the prior probability density functions. The prior probability distribution functions can either be normal or uniform. In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
+
+**[log-likelihood]** - In this section the 
+
 
 ### CMA Parameters
 Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
