@@ -4,7 +4,7 @@ pypi4u is a python based project that provides a TMCMC and covariance matrix ada
 
 ![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
-The TMCMC implementation directly generates samples from the probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochasitc mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
+The TMCMC implementation directly generates samples from the probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
 
 ## Getting Started
 The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7. Furthermore, the following python packages need to be installed: 
@@ -71,9 +71,12 @@ x_0 = 5 5 5 5 #starting point, initial guess for the theta vector
 sigma_0 = 5 #initial standard deviation
 ```
 
+These specific parameters can be interpreted as following
+* Bounds 
 
-### Running the Code
-After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
+
+### Executing the Code
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
 ## Example Problem - DEMO 
 
 ### Generation of Synthetic Data 
