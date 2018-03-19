@@ -44,7 +44,7 @@ error = constant
 
 It consists of three sections, the model, priors and log-likelihood. In the model section the number of model parameters needs to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters, are the parameters that are to be predicted. For example if the model function is the following: 
 
-![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Cthetat_3%29%3Dt%5Ccdot%5Ctheta_2%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_1%5Ccdot%5Csin%28t%29) 
+![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
 The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3). The model file consists of a python script, that solely contains the function definition corresponding to the model function. For example: 
 
@@ -56,8 +56,6 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 
 ```
 Finally the data file is a text file that contains a list of input values and corresponding output values (function evalutions).
-
-
 
 ### CMA Parameters
 Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
@@ -79,6 +77,7 @@ These specific parameters can be interpreted as following
 
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On excution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the standard deviation of the noise, within the data set. 
+
 ## Example Problem - DEMO 
 
 ### Generation of Synthetic Data
