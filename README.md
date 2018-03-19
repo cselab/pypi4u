@@ -38,7 +38,7 @@ The function was then evaluated for
 
 ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D)
 
-Additionally random noise is introduced to the data set by simply adding epsilon to the function evaluations 
+Additionally, random noise is introduced by simply adding epsilon to the function evaluations.T The sum of the terms forms 
 
 ![equation](http://latex.codecogs.com/gif.latex?y_i%20%3D%20f%28t_i%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29&plus;%5Cvarepsilon)
 
@@ -51,7 +51,7 @@ where epsilon equates to
 
 
 
-
+richard stahl ist ein held
 
 
 
