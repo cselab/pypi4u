@@ -16,7 +16,7 @@ The covariance matrix adaptation evolution strategy (CMA-ES) implementation requ
 * importlib
 
 ## How it Works
-The following section explains the underlying structure of the project and how the provided code can be used to make estimations of model parameters. This is then further illustrated by the proceeding example. 
+The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
 ### Common Parameters
 Both implementations access a common paramter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem. The structure of the common parameter file is depicted below. It consists of three sections, the model, priors and log-likelihood. 
@@ -55,7 +55,7 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 
 ```
 
-Finally the data file is a text file that contains a list of input values and corresponding output values (function evalutions).
+Finally the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions).
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions. The prior probability distribution functions can either be normal or uniform. In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
 
