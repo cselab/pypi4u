@@ -143,10 +143,11 @@ error_prior = uniform 0 2
 # error either proportional or constant
 error = constant
 ```
+**[MODEL]** - The model function consists of three parameters, therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
 
+**[PRIORS]** - In this examplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2. 
 
-
-**[PRIORS]** - In this examplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also be a normal probability distribution, but with a mean of 1 and a variance of 2. In this case the error_prior is a uniform distribution with a minimum of 0 and maximum of 2. 
+**[log-likelihood]** - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. 
 
 ### Model Function - Python Function 
 The model function is defined as following: 
