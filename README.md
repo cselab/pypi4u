@@ -83,7 +83,6 @@ BURN_IN = 20
 [optimization settings]
 # OPTIONAL
 #max_stages
-#
 
 #Either here or in an additional default settings file
 [DEFAULT]
@@ -124,7 +123,49 @@ where epsilon equates to ![equation](http://latex.codecogs.com/gif.latex?%5Cvare
 
 Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton *f* to approximate the values of the thetas and epsilon. 
 
+### Common Parameters
+```
+[MODEL]
+Number of model parameters = 3
+model file = model_function.py
+data file = data.txt 
+
+[PRIORS]
+# Set prior distribution
+# prior distributions uniform normal
+
+P1 = normal 4 2
+P2 = normal 1 2
+P3 = uniform 0 5
+error_prior = uniform 0 2
+
+[log-likelihood]
+# error either proportional or constant
+error = constant
+```
+
+
+### Model Function 
+The model function is defined as following: 
+
+![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
+
+Therefore, the first argument of the method, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: 
+
+```
+import math
+
+def model_function(theta, time): #evaluates my model function for a given theta and time
+	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
+```
+
+
+
 In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
+
+
+### CMA-ES Implementation
+
 
 
 
