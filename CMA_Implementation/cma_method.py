@@ -1,13 +1,13 @@
-'''	*
- 	*  cma_method.py
- 	*  pypi4u
- 	*
- 	*  Created by Paul Aurel Diederichs on 01/01/18.
- 	*  Copyright 2018 ETH Zurich. All rights reserved.
-	*
- 	*'''
-
-
+# *
+# *  cma_method.py
+# *  PyPi4U
+# *
+# *  Authors:
+# *     Paul Aurel Diederichs  - daurel@ethz.ch
+# *     Georgios Arampatzis - arampatzis@collegium.ethz.ch
+# *     Panagiotis Chatzidoukas
+# *  Copyright 2018 ETH Zurich. All rights reserved.
+# *
 
 
 import ConfigParser 
