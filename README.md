@@ -59,7 +59,7 @@ Besides setting the common parameters, the user must also define parameters spec
 #defining the parameters for CMA 
 
 bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
-x_0 = 5 5 5 5 #starting point, initial guess for the theta vector 
+x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)
 sigma_0 = 5 #initial standard deviation
 ```
 
@@ -132,10 +132,9 @@ where epsilon equates to
 
 ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
 
- Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton *f* to approximate the values of the thetas and epsilon. 
+Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a standard deviation of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definiton *f* to approximate the values of the thetas and epsilon. 
 
-
-  In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
+In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
 
 
 
