@@ -1,3 +1,13 @@
+# *
+# *  sequential_tmcmc.py
+# *  PyPi4U
+# *
+# *  Authors:
+# *     Philipp Mueller  - muellphi@ethz.ch
+# *     Georgios Arampatzis - arampatzis@collegium.ethz.ch
+# *     Panagiotis Chatzidoukas
+# *  Copyright 2018 ETH Zurich. All rights reserved.
+# *
 import argparse
 import sys
 import numpy as np
@@ -6,7 +16,6 @@ import matplotlib.pyplot as plt
 import re
 import argparse
 from math import exp, log
-#import fitfun_file
 import configparser
 from importlib import import_module
 from priors import *
@@ -47,7 +56,7 @@ class LogLikelihood:
             if self.gamma != 0 and self.alpha != 0:
                 volatility = ((self.alpha * abs(f_ti_v) ** self.gamma +
                                self.beta) * self.sigma)**2
-            elif alpha != 0:
+            elif self.alpha != 0:
                 volatility = ((self.alpha + self.beta) * self.sigma)**2
             sum += - (self.data[t, 1] - f_ti_v)**2 / (2*volatility)
             sum += - 0.5 * log(2*np.pi*volatility)
@@ -232,7 +241,7 @@ class Parameters:
         self.error_prior = self.priors[self.dimension]
         self.priors = np.array(self.priors[0:self.dimension])
         self.Num = np.full(self.MaxStages, self.PopSize)
-        self.print_data()
+        #self.print_data()
 
     def print_data(self):
         print(vars(self))
@@ -280,24 +289,6 @@ def prepare_newgen(nchains, leaders, curgen_db, parameters, runinfo):
     return newchains
 
 
-def evaluate_F(x):
-    """Evaluate posterior PDF at point."""
-    try:
-        return fitfun_file.fitfun(x)
-    except:
-        #raise
-        #TODO UNCOMMENT RAISE
-        return rosenbrock(x)
-
-
-def rosenbrock(x):
-    """ Rosenbrock fitfun. Included for debugging only"""
-    f = 0.0
-    N = np.size(x)
-    for i in range(N - 1):
-        f = f + 100.0 * (x[i + 1] - x[i] * x[i])**2 + (x[i] - 1.0) ** 2
-    f = -f
-    return f
 
 
 def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
