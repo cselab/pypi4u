@@ -145,6 +145,8 @@ error = constant
 ```
 
 
+In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that corrupts the data. In this case the error_prior is a uniform distribution with a minimum of 0 and maximum of 2. 
+
 ### Model Function 
 The model function is defined as following: 
 
@@ -159,13 +161,8 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
-
-
-In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that 
-
-
 ### CMA-ES Implementation
-
+To be able to implement the CMA-ES algorithm the CMA parameters must still be defined. 
 
 
 
