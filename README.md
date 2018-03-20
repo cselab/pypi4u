@@ -176,7 +176,8 @@ x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entr
 sigma_0 = 5 #initial standard deviation
 ```
 
-In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector.  
+In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5. 
+
 
 
 
