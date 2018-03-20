@@ -10,7 +10,7 @@
 # *
 
 
-import ConfigParser 
+import configparser 
 import importlib
 import math
 import numpy as np 

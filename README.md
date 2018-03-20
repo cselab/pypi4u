@@ -7,7 +7,7 @@ pypi4u is a python based project that provides a TMCMC and covariance matrix ada
 The TMCMC implementation directly generates samples from the above probability function by using a markov chain. The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators that define the trend of the data. 
 
 ## Getting Started
-The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 2.7. Furthermore, the following python packages need to be installed: 
+The covariance matrix adaptation evolution strategy (CMA-ES) implementation requires python 3.  Furthermore, the following python packages need to be installed: 
 
 * cma 2.5.3 - https://pypi.python.org/pypi/cma
 * numpy

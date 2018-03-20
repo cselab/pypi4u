@@ -1,9 +1,9 @@
-import ConfigParser 
+import configparser 
 import numpy as np 
 
 
 def read_in():
-	config_common_par = ConfigParser.ConfigParser()
+	config_common_par = configparser.ConfigParser()
 	config_common_par.read('common_parameters.par')
 
 	num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
@@ -33,7 +33,7 @@ def read_in():
 			else:
 				print("Unexpected error - Unknown Prior Distribution for prior %s" %(i+1))
 				raise()
-		except ConfigParser.NoOptionError:
+		except configparser.NoOptionError:
 			print("error occured when defining prior %s " %(i+1))
 			raise()
 
@@ -51,7 +51,7 @@ def read_in():
 		else:
 			print("Unexpected error - Unknown Error Prior Distribution for prior")
 			raise()
-	except ConfigParser.NoOptionError:
+	except configparser.NoOptionError:
 		print("error occured when defining the error prior")
 		raise()
 
@@ -59,14 +59,14 @@ def read_in():
 	try: 
 		error_type = config_common_par.get('log-likelihood', 'error') 
 		if(error_type not in error_types):
-			print "unknown error type: " + error_type
+			print ("unknown error type: " + error_type)
 			raise()
-	except ConfigParser.NoOptionError:
-		print 'error is not defined at all, see section [log-likelihood]'
+	except configparser.NoOptionError:
+		print ('error is not defined at all, see section [log-likelihood]')
 		raise()
 
 
-	config_cma_par = ConfigParser.ConfigParser()
+	config_cma_par = configparser.ConfigParser()
 	config_cma_par.read('CMA_parameters.par')
 
 	bounds = config_cma_par.get('PARAMETERS', 'bounds')
