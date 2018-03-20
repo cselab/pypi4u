@@ -47,7 +47,7 @@ error = constant
 
 The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to path of the python script, that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evalutions with noise).
 
-**[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the paramter file P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]. 
+**[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the paramter file P[number of parameter] = [normal] [mean] [standard deviation] or P[number of parameter] = [uniform] [maximum] [minimum]. The error prior defines the prior knowledge aviliable in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.
 
 **[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
 
@@ -92,7 +92,7 @@ MaxIter = 1000
 ```
 
 ### Model Function
-The model function needs to be defined by the user. It is a method that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
+The model function needs to be defined by the user. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
 
 ```
 import math
@@ -145,14 +145,15 @@ error = constant
 ```
 
 
-In this case the prior for the first parameter would be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter would also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. The error prior defines the prior knowledge aviliable in regards to the noise that corrupts the data. In this case the error_prior is a uniform distribution with a minimum of 0 and maximum of 2. 
 
-### Model Function 
+**[PRIORS]** - In this examplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a standard deviation of 2. The prior of the second parameter is also be a normal probability distribution, but with a mean of 1 and a standard devation of 2. In this case the error_prior is a uniform distribution with a minimum of 0 and maximum of 2. 
+
+### Model Function - Python Function 
 The model function is defined as following: 
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-Therefore, the first argument of the method, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: 
+Therefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: 
 
 ```
 import math
@@ -161,6 +162,7 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
+Both the CMA-ES and the TMCMC implementation call this python function.  
 ### CMA-ES Implementation
 To be able to implement the CMA-ES algorithm the CMA parameters must still be defined. 
 
