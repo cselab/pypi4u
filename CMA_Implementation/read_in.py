@@ -83,3 +83,4 @@ def read_in():
 
 
 	return (x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename)
+	

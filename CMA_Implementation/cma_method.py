@@ -73,3 +73,4 @@ def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound,
 
 
 	matplotlib.pyplot.show('hold')
+	
