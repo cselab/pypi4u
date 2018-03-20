@@ -165,10 +165,18 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 
 Both the CMA-ES and the TMCMC implementation call this python function.  
 ### CMA-ES Implementation
-To be able to implement the CMA-ES algorithm the CMA parameters must still be defined. 
+To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  
 
+```
+[PARAMETERS]
+#defining the parameters for CMA 
 
+bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
+x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)
+sigma_0 = 5 #initial standard deviation
+```
 
+In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector.  
 
 
 
