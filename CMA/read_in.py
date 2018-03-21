@@ -1,18 +1,18 @@
-import configparser 
-import numpy as np 
+import configparser
+import numpy as np
 
 
 def read_in():
 	config_common_par = configparser.ConfigParser()
-	config_common_par.read('common_parameters.par')
+	config_common_par.read('model.par')
 
 	num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
 
-	model_filename = config_common_par.get('MODEL', 'model file') #reading in the filename of the model function 
+	model_filename = config_common_par.get('MODEL', 'model file') #reading in the filename of the model function
 	model_filename = model_filename.split('.')[0]
 
 	data_filename = config_common_par.get('MODEL', 'data file')
-	data_array = np.loadtxt("%s" %data_filename) 
+	data_array = np.loadtxt("%s" %data_filename)
 	t_data = data_array[:,0]
 	y_data = data_array[:,1]
 
@@ -56,8 +56,8 @@ def read_in():
 		raise()
 
 	error_types = ['proportional', 'constant']
-	try: 
-		error_type = config_common_par.get('log-likelihood', 'error') 
+	try:
+		error_type = config_common_par.get('log-likelihood', 'error')
 		if(error_type not in error_types):
 			print ("unknown error type: " + error_type)
 			raise()
@@ -67,7 +67,7 @@ def read_in():
 
 
 	config_cma_par = configparser.ConfigParser()
-	config_cma_par.read('CMA_parameters.par')
+	config_cma_par.read('cma.par')
 
 	bounds = config_cma_par.get('PARAMETERS', 'bounds')
 	lower_bound = float(bounds.split(' ')[0])
@@ -83,4 +83,3 @@ def read_in():
 
 
 	return (x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename)
-	

@@ -10,8 +10,10 @@
 # *
 
 
-from read_in import read_in 
-from CMA_method import CMA_method
+from read_in import read_in
+from CMA import CMA
 
-parameters = read_in()
-CMA_method(*parameters)
+
+parameters = read_in( )
+
+CMA(*parameters)
