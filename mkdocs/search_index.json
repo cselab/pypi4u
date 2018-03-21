@@ -1,194 +1,144 @@
 {
     "docs": [
         {
-            "location": "/",
-            "text": "Welcome to Pi4U\n\n\nPi4U is a HPC framework for Bayesian uncertainty quantification of large scale computational models.\n\n\nModules and algorithms\n\n\nInference\n\n\nTMCMC\n\n\nABC-Subsim\n\n\nDRAM\n\n\nSingle-objective optimization\n\n\nCMAES\n\n\nAmalgam\n\n\nMulti-objective optimization\n\n\nNSGA-II\n\n\nMOCMAES\n\n\nMOEAD\n\n\nImplementations\n\n\nParallel\n\n\nSequential",
+            "location": "/README/",
+            "text": "PyPi4u\n\n\nPyPi4u is inteded to provide the user with easy-to-use uncertainty quantification tools written in Python. \nIt provides a covariance matrix adaptation evolution strategy implementation (CMA-ES) and a transitional markov-chain monte carlo (TMCMC) implementation to perform uncertainty quantification and parameter estimation. The CMA-ES implementation uses the covariance matrix adaptation evolution strategy to determine the maximum of the posterior probability distribution, which is defined as following: \n\n\n\n\nThe TMCMC algorithm avoids difficulties in sampling directly from the target posterior probability distribution by sampling from a series of intermediate probability distributions. This annealing process can be denoted by \n\n\n\n\nINSERT FORMULA\n\n\n\n\nThe generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators given the data. \n\n\nGetting started\n\n\nTo download the implementations, please visit the github \nrepository\n and clone it. \n\n\nHow it Works\n\n\nThe following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.\n\n\nCommon Parameters\n\n\nBoth the CMA-ES and TMCMC implementation access a common parameter file, named \ncommon_parameters.par\n. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. \n\n\n[MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant\n\n\n\n\n[MODEL]\n - In the model section the number of model parameters is to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters are the parameters that are to be predicted. For example if the model function is the following: \n\n\n \n\n\nThe model parameters would be \n and thus the number of model parameters would be 3. The model file should be set equal to path of the python script that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evaluations with noise).\n\n\n[PRIORS]\n - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the parameter file P[number of parameter] = [normal] [mean] [variance] or P[number of parameter] = [uniform] [minimum] [maximum]. The error prior defines the prior knowledge available in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.\n\n\n[log-likelihood]\n - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term \n. In the case of a proportional error, the magnitude of the error also depends on \nt\n, the independent variable, as it is defined as \n, where \n. \n\n\nCMA Parameters\n\n\nBesides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in \nCMA_parameters.par\n file, are the following: \n\n\n[PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation\n\n\n\n\nThese specific parameters can be interpreted as following:\n\n \nBounds\n - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. \n\n \nx_0\n - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (\n) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. \n* \nsigma_0\n - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses. \n\n\nTMCMC Parameters\n\n\nBesides the common parameters, also TMCMC requires additional parameters. They are included in the parameter file 'TMCMC.par' and are TMCMC specific parameters such as pop_size, bbeta = 0.04, tol_COV and BURN_IN. Further settings can be changed within the default settings folder.\n\n\nModel Function\n\n\nThe model function needs to be defined by the user. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and \nt\n, and returns a float. For example: \n\n\nimport math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)\n\n\n\n\nData File\n\n\nThe user needs to append a data file. This data file should be a text file that contains two columns, delimited by a space. The first column should be the value of the independent variable [\nt\n], while the second column should be corresponding function evaluation/measurement [\nfunction evaluation\n]. \n\n\nExecuting the Code\n\n\nAfter having filled in the parameter files, the estimators for the model parameters are simply obtained by either running \nCMA_implementation.py\n or \nTMCMC_implementation.py\n. On execution a text file named \nCMA_estimators.txt\n or \nTMCMC_estimators.txt\n will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set. \n\n\nExample Problem - DEMO\n\n\nGeneration of Synthetic Data\n\n\nSynthetic data was generated from a predefined model function:\n\n\n \n\n\nThe model parameters were set equal to \n. The function was then evaluated for \n. Additionally, random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms \n\n\n\n\nwhere epsilon equates to \n\n\nConsequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document \ndata.txt\n, which lists the input value \nt\n and the corresponding function value \nf\n. Both approaches use the synthetic data and the function definition \nf\n to approximate the values of the thetas and epsilon. \n\n\nCommon Parameters\n\n\n[MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant\n\n\n\n\n[MODEL]\n - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. \n\n\n[PRIORS]\n - In this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2. \n\n\n[log-likelihood]\n - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (\n). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. \n\n\nModel Function - Python Function\n\n\nThe model function is defined as following: \n\n\n \n\n\nTherefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: \n\n\nimport math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)\n\n\n\n\nBoth the CMA-ES and the TMCMC implementation call this python function.  \n\n\nCMA-ES Implementation\n\n\nTo be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  \n\n\n[PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation\n\n\n\n\nIn this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5.",
             "title": "Home"
         },
         {
-            "location": "/#welcome-to-pi4u",
-            "text": "Pi4U is a HPC framework for Bayesian uncertainty quantification of large scale computational models.",
-            "title": "Welcome to Pi4U"
+            "location": "/README/#pypi4u",
+            "text": "PyPi4u is inteded to provide the user with easy-to-use uncertainty quantification tools written in Python. \nIt provides a covariance matrix adaptation evolution strategy implementation (CMA-ES) and a transitional markov-chain monte carlo (TMCMC) implementation to perform uncertainty quantification and parameter estimation. The CMA-ES implementation uses the covariance matrix adaptation evolution strategy to determine the maximum of the posterior probability distribution, which is defined as following:    The TMCMC algorithm avoids difficulties in sampling directly from the target posterior probability distribution by sampling from a series of intermediate probability distributions. This annealing process can be denoted by    INSERT FORMULA   The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators given the data.",
+            "title": "PyPi4u"
         },
         {
-            "location": "/#modules-and-algorithms",
+            "location": "/README/#getting-started",
+            "text": "To download the implementations, please visit the github  repository  and clone it.",
+            "title": "Getting started"
+        },
+        {
+            "location": "/README/#how-it-works",
+            "text": "The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.",
+            "title": "How it Works"
+        },
+        {
+            "location": "/README/#common-parameters",
+            "text": "Both the CMA-ES and TMCMC implementation access a common parameter file, named  common_parameters.par . The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood.   [MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant  [MODEL]  - In the model section the number of model parameters is to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters are the parameters that are to be predicted. For example if the model function is the following:      The model parameters would be   and thus the number of model parameters would be 3. The model file should be set equal to path of the python script that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evaluations with noise).  [PRIORS]  - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the parameter file P[number of parameter] = [normal] [mean] [variance] or P[number of parameter] = [uniform] [minimum] [maximum]. The error prior defines the prior knowledge available in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.  [log-likelihood]  - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term  . In the case of a proportional error, the magnitude of the error also depends on  t , the independent variable, as it is defined as  , where  .",
+            "title": "Common Parameters"
+        },
+        {
+            "location": "/README/#cma-parameters",
+            "text": "Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in  CMA_parameters.par  file, are the following:   [PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation  These specific parameters can be interpreted as following:   Bounds  - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function.    x_0  - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise ( ) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. \n*  sigma_0  - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses.",
+            "title": "CMA Parameters"
+        },
+        {
+            "location": "/README/#tmcmc-parameters",
+            "text": "Besides the common parameters, also TMCMC requires additional parameters. They are included in the parameter file 'TMCMC.par' and are TMCMC specific parameters such as pop_size, bbeta = 0.04, tol_COV and BURN_IN. Further settings can be changed within the default settings folder.",
+            "title": "TMCMC Parameters"
+        },
+        {
+            "location": "/README/#model-function",
+            "text": "The model function needs to be defined by the user. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and  t , and returns a float. For example:   import math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)",
+            "title": "Model Function"
+        },
+        {
+            "location": "/README/#data-file",
+            "text": "The user needs to append a data file. This data file should be a text file that contains two columns, delimited by a space. The first column should be the value of the independent variable [ t ], while the second column should be corresponding function evaluation/measurement [ function evaluation ].",
+            "title": "Data File"
+        },
+        {
+            "location": "/README/#executing-the-code",
+            "text": "After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running  CMA_implementation.py  or  TMCMC_implementation.py . On execution a text file named  CMA_estimators.txt  or  TMCMC_estimators.txt  will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set.",
+            "title": "Executing the Code"
+        },
+        {
+            "location": "/README/#example-problem-demo",
             "text": "",
-            "title": "Modules and algorithms"
+            "title": "Example Problem - DEMO"
         },
         {
-            "location": "/#inference",
-            "text": "TMCMC  ABC-Subsim  DRAM",
-            "title": "Inference"
+            "location": "/README/#generation-of-synthetic-data",
+            "text": "Synthetic data was generated from a predefined model function:     The model parameters were set equal to  . The function was then evaluated for  . Additionally, random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms    where epsilon equates to   Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document  data.txt , which lists the input value  t  and the corresponding function value  f . Both approaches use the synthetic data and the function definition  f  to approximate the values of the thetas and epsilon.",
+            "title": "Generation of Synthetic Data"
         },
         {
-            "location": "/#single-objective-optimization",
-            "text": "CMAES  Amalgam",
-            "title": "Single-objective optimization"
+            "location": "/README/#common-parameters_1",
+            "text": "[MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant  [MODEL]  - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given.   [PRIORS]  - In this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2.   [log-likelihood]  - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 ( ). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters.",
+            "title": "Common Parameters"
         },
         {
-            "location": "/#multi-objective-optimization",
-            "text": "NSGA-II  MOCMAES  MOEAD",
-            "title": "Multi-objective optimization"
+            "location": "/README/#model-function-python-function",
+            "text": "The model function is defined as following:      Therefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following:   import math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)  Both the CMA-ES and the TMCMC implementation call this python function.",
+            "title": "Model Function - Python Function"
         },
         {
-            "location": "/#implementations",
+            "location": "/README/#cma-es-implementation",
+            "text": "To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.    [PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation  In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5.",
+            "title": "CMA-ES Implementation"
+        },
+        {
+            "location": "/getting_started/",
+            "text": "Getting started\n\n\nBoth algorithms are implemented in Python 3 and require the installation of additional packages.\nTo download the current code, please visit the github \nrepository\n and clone it. \n\n\nInstallation\n\n\nBoth implementations rely on mostly well-known packages as, e.g. numpy. To use the code, please install the required packages via \"pip3 install \npackage\n\". \n\n\nCMA-ES\n requires the packages\n\n\n\n\ncma 2.5.3 - https://pypi.python.org/pypi/cma,\n\n\nnumpy,\n\n\nConfigParser,\n\n\nand matplotlib.\n\n\n\n\nTMCMC\n requires the packages\n\n\n\n\nnumpy,\n\n\nscipy, \n\n\nmatplotlib,\n\n\nand configparser.\n\n\n\n\nRunning an Example\n\n\nPyPi4u comes with a ready-to-run example including a model, synthetic data and predefined parameters. \n\n\nModel and Synthetic Data\n\n\nThe model is given by the equation \n\n\n.\n\n\nThe model parameters were set equal to \n and the function was evaluated for \n. Random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms \n\n\n\n\nwhere epsilon equates to \n\n\nConsequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document \ndata.txt\n, which lists the input value \nt\n and the corresponding function value \nf\n. Both approaches use the synthetic data and the function definition \nf\n to approximate the values of the thetas and epsilon. \n\n\nPlay with Parameters\n\n\nThe parameters for the CMA-ES and TMCMC algorithms can be set in the common_parameters.par, CMA.par and the TMCMC.par files. A more detailed description of the parameters and how to set them, can be found in the following. For the example, they are already set in a feasable fashion.\n\n\nHow to run the Example\n\n\nRun \nCMA_implementation.py\n or \nsequential_tmcmc.py\n to execute the CMA implementation or TMCMC implementation, respectively. On execution of the CMA implementation a text file named \nCMA_estimators.txt\n is created, in which the values of the estimators are stored. For the TMCMC implementation, \"curgen_db_***.dat\" files are generated, corresponding to the different generations. The results can be plotted by \"plotting.py\".",
+            "title": "Getting started"
+        },
+        {
+            "location": "/getting_started/#getting-started",
+            "text": "Both algorithms are implemented in Python 3 and require the installation of additional packages.\nTo download the current code, please visit the github  repository  and clone it.",
+            "title": "Getting started"
+        },
+        {
+            "location": "/getting_started/#installation",
+            "text": "Both implementations rely on mostly well-known packages as, e.g. numpy. To use the code, please install the required packages via \"pip3 install  package \".   CMA-ES  requires the packages   cma 2.5.3 - https://pypi.python.org/pypi/cma,  numpy,  ConfigParser,  and matplotlib.   TMCMC  requires the packages   numpy,  scipy,   matplotlib,  and configparser.",
+            "title": "Installation"
+        },
+        {
+            "location": "/getting_started/#running-an-example",
+            "text": "PyPi4u comes with a ready-to-run example including a model, synthetic data and predefined parameters.",
+            "title": "Running an Example"
+        },
+        {
+            "location": "/getting_started/#model-and-synthetic-data",
+            "text": "The model is given by the equation   .  The model parameters were set equal to   and the function was evaluated for  . Random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms    where epsilon equates to   Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document  data.txt , which lists the input value  t  and the corresponding function value  f . Both approaches use the synthetic data and the function definition  f  to approximate the values of the thetas and epsilon.",
+            "title": "Model and Synthetic Data"
+        },
+        {
+            "location": "/getting_started/#play-with-parameters",
+            "text": "The parameters for the CMA-ES and TMCMC algorithms can be set in the common_parameters.par, CMA.par and the TMCMC.par files. A more detailed description of the parameters and how to set them, can be found in the following. For the example, they are already set in a feasable fashion.",
+            "title": "Play with Parameters"
+        },
+        {
+            "location": "/getting_started/#how-to-run-the-example",
+            "text": "Run  CMA_implementation.py  or  sequential_tmcmc.py  to execute the CMA implementation or TMCMC implementation, respectively. On execution of the CMA implementation a text file named  CMA_estimators.txt  is created, in which the values of the estimators are stored. For the TMCMC implementation, \"curgen_db_***.dat\" files are generated, corresponding to the different generations. The results can be plotted by \"plotting.py\".",
+            "title": "How to run the Example"
+        },
+        {
+            "location": "/own_model/",
+            "text": "Set up own model\n\n\nModel Function\n\n\nThe example model function is defined as following: \n\n\n \n\n\nTherefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: \n\n\nimport math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)\n\n\n\n\nBoth the CMA-ES and the TMCMC implementation call this python function.  \n\n\nParameters\n\n\nBoth CMA-ES and TMCMC enable the user to tweak the algorithms by changing some parameters. We split the parameters in a common_parameters.par, CMA_parameters.par and TMCMC.par file, with the common, the CMA specific and TMCMC specific parameters, respectively. \n\n\nCommon Parameters\n\n\n[MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant\n\n\n\n\n[MODEL]\n - The model function comprises three parameters; therefore the number of model parameters was set to three. Additionally, the relative paths to the python model function and to the data file are given. \n\n\n[PRIORS]\n - In priors you can encode your prior beliefs about the parameters. Follow the following formats:\n\n\n\n\nnormal distributed parameter i: Pi = normal mean variance\n\n\nuniformly distributed parameter i: Pi = normal lower_bound upper_bound\n\n\n\n\nIn this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2. \n\n\n[log-likelihood]\n - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (\n). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. \n\n\nCMA-ES Implementation\n\n\nTo be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  \n\n\n[PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation\n\n\n\n\nIn this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5.",
+            "title": "How to implement your own model"
+        },
+        {
+            "location": "/own_model/#set-up-own-model",
             "text": "",
-            "title": "Implementations"
+            "title": "Set up own model"
         },
         {
-            "location": "/#parallel",
-            "text": "",
-            "title": "Parallel"
+            "location": "/own_model/#model-function",
+            "text": "The example model function is defined as following:      Therefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following:   import math\n\ndef model_function(theta, time): #evaluates my model function for a given theta and time\n    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)  Both the CMA-ES and the TMCMC implementation call this python function.",
+            "title": "Model Function"
         },
         {
-            "location": "/#sequential",
-            "text": "",
-            "title": "Sequential"
+            "location": "/own_model/#parameters",
+            "text": "Both CMA-ES and TMCMC enable the user to tweak the algorithms by changing some parameters. We split the parameters in a common_parameters.par, CMA_parameters.par and TMCMC.par file, with the common, the CMA specific and TMCMC specific parameters, respectively.",
+            "title": "Parameters"
         },
         {
-            "location": "/python/",
-            "text": "Python interface of TMCMC\n\n\nModule tmcmc implements the TMCMC (Transitional Markov-Chain Monte Carlo) algorithm.\n\n\nWe use the C implementation of the algorithm and the \nctypes wrapper\n module for calling it from Python.\nSince the function we are sampling from is also written in Python, we use \nembedded Python\n to call the\nfunction from the C code and \nnumpy\n to pass arguments between the two environments.\n\n\nTMCMC\n\n\nThe Python interface of TMCMC is defined as follows:\n\n\ndef tmcmc(fitfun, dim=2, maxstages=20, popsize=1024, lowerbound=[-6,-6], upperbound=[6,6], id=0):\n\n\nInputs:\n\n\n\n\nfitfun\n: python script name (without the .py extension) that implements the log-likelihood function.\nThe prototype is: fitfun(x, dim), where \nx\n is a vector of parameter values and \ndim\n the number of parameters.\n\n\ndim\n: number of parameters\n\n\nmaxstages\n: maximum number of stages that can be performed by the TMCMC algorithm\n\n\npopsize\n: number of samples per stage\n\n\nlowerbound\n: lower bound for each parameter\n\n\nupperbound\n: uppoer bound for each parameter\n\n\nid\n: integer identifier for the specific \ntmcmc()\n call. The value is appended to the output files generated by the algorithm.\n\n\n\n\nOutputs:\n\n\n\n\nThe tmcmc function returns the log-evidence of the model.\n\n\nIn addition, for each stage of the algorithm, the evaluation points and their log-likelihood are stored in text files\nnamed as \ncurgen_db_xxx_yyy.txt\n, where \nxxx\n: \nid\n of the \ntmcmc()\n call, and \nyyy\n: stage of the algorithm.\n\n\n\n\nFitness function\n\n\nThe fitness function typically computes the model output and \nreturns\n the log-likelihood of the data.\n\n\ndef fitfun(theta, dim):\n\n\n\n\ntheta\n: parameters of the model\n\n\ndim\n: number of parameters\n\n\n\n\nPlotting\n\n\n2D scatter plots of the samples stored in the output text files, colored according to their log-likelihood values,\ncan be produced by means of the \nplot_gen()\n function.\n\n\ndef plot_gen(filename, dim=2, i=1, j=2, show=1, save=0):\n\n\n\n\nfilename\n: curgen_db_xxx_yyy.txt file\n\n\ndim\n: number of parameters\n\n\ni\n: i-th parameter\n\n\nj\n: j-th parameter\n\n\nnamei\n: label for the i-th parameter\n\n\nnamej\n: label for the j-th parameter\n\n\nshow\n: depict the plot on the screen\n\n\nsave\n: save the plot in a png file (filename.png)\n\n\n\n\nExample\n\n\ndemo3.py\n\n\n# Import necessary modules\nimport sys\nsys.path.append(\"../lib_python\")\nfrom tmcmc import *\nfrom plot_gen import *\n\nlogEv=tmcmc(\"fitfun3\",dim=2,maxstages=20,popsize=4096,lowerbound=[-10,-10],upperbound=[10,10],id=3)\nprint(\"logEv=\",logEv[0])\n\nplot_gen('curgen_db_003_009.txt', dim=2, i=1, j=2, namei='alpha', namej='sigma^2', show=1, save=0)\n\n\n\nfitfun3.py\n\n\n# data-driven inference\n# underlying data model: y = ax + e, where\n# a=0.3 and e=N(0,sigma^2), sigma=0.1\n\nimport numpy as np\nimport math\n\ndef fitfun3(theta, dim):\n\n    a = theta[0]\n    sigma = theta[1]\n\n    data = np.loadtxt('data3.txt')\n    N=data.shape[0];\n\n    x = data[:,0]\n    dy = data[:,1]\n\n    y = a*x;\n\n    SSE = np.sum((y-dy)\\*\\*2)\n    sy=sigma;\n    logn = -0.5*N*math.log(2*math.pi)-0.5*N*math.log(sy*sy)-0.5*SSE/(sy*sy)\n\n    return logn\n\n\n\nInstallation and testing\n\n\nPrerequisites\n\n\nMake sure that the following required software has been installed.\n\n\n\n\nGCC compiler\n\n\nPython 2.7 (or higher)\n\n\nPython-devel package\n\n\npython2-config\n or \npython3-config\n must be available\n\n\nMacOS: automatically available if python has been installed with brew\n\n\n\n\n\n\nPython numpy package\n\n\nMacOS: \npip2 install numpy\n or \npip3 install numpy\n\n\n\n\n\n\nPython matplotlib package\n\n\nMacOS: \npip2 install matplotlib\n or \npip3 install matplotlib\n\n\n\n\n\n\nGNU GSL library\n\n\nMacOS: \nbrew install gsl\n\n\nWe also provide the option to download and use a local copy of the GSL library\n\n\n\n\n\n\n\n\nInstallation steps\n\n\n1. Download from GitHub:\n\n\ngit clone https://github.com/cselab/pi4u.git pi4u-tmcmc -b tmcmc\n\n\nIf you do not have git, download \npi4u-tmcmc.zip\n from here: \nGitHub download link\n\n\n2. Go to pi4u-tmcmc/src and build the TMCMC library:\n\n\ncd pi4u-tmcmc/src; make\n\n\ncd ..\n  (\ngo back to the pi4u-tmcmc directory\n)\n\n\nTesting - Running the demo\n\n\n1. Go to pi4u-tmcmc/demo_python and run demo3.py\n\n\ncd demo_python; python2 demo3.py\n  \n\n\n2. The scatter plot of samples for our example should be as follows:\n\n\n\n\nTroubleshooting and additional options\n\n\nHow to build the software using a local copy of the GSL library\n\n\n1. Go to pi4u-tmcmc/gsl and run build.sh:\n\n\ncd pi4u-tmcmc/gsl; ./build.sh\n\n\ncd ..\n  (\ngo back to the pi4u-tmcmc directory\n)\n\n\n2. Go to pi4u-tmcmc/src and build the TMCMC library:\n\n\ncd src; make -B mygsl=1\n\n\nHow to build the software using python3\n\n\n1. Go to pi4u-tmcmc/src and (re)-build the TMCMC library:\n\n\nmake -B python3=1\n\n\ncd ..\n  (\ngo back to the pi4u-tmcmc directory\n)\n\n\n2. Go to demo_python and run demo3.py using python3\n\n\ncd demo_python; python3 demo3.py",
-            "title": "Python"
+            "location": "/own_model/#common-parameters",
+            "text": "[MODEL]\nNumber of model parameters = 3\nmodel file = model_function.py\ndata file = data.txt \n\n[PRIORS]\n# Set prior distribution\n# prior distributions uniform normal\n\nP1 = normal 4 2\nP2 = normal 1 2\nP3 = uniform 0 5\nerror_prior = uniform 0 2\n\n[log-likelihood]\n# error either proportional or constant\nerror = constant  [MODEL]  - The model function comprises three parameters; therefore the number of model parameters was set to three. Additionally, the relative paths to the python model function and to the data file are given.   [PRIORS]  - In priors you can encode your prior beliefs about the parameters. Follow the following formats:   normal distributed parameter i: Pi = normal mean variance  uniformly distributed parameter i: Pi = normal lower_bound upper_bound   In this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2.   [log-likelihood]  - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 ( ). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters.",
+            "title": "Common Parameters"
         },
         {
-            "location": "/python/#python-interface-of-tmcmc",
-            "text": "Module tmcmc implements the TMCMC (Transitional Markov-Chain Monte Carlo) algorithm.  We use the C implementation of the algorithm and the  ctypes wrapper  module for calling it from Python.\nSince the function we are sampling from is also written in Python, we use  embedded Python  to call the\nfunction from the C code and  numpy  to pass arguments between the two environments.",
-            "title": "Python interface of TMCMC"
-        },
-        {
-            "location": "/python/#tmcmc",
-            "text": "The Python interface of TMCMC is defined as follows:  def tmcmc(fitfun, dim=2, maxstages=20, popsize=1024, lowerbound=[-6,-6], upperbound=[6,6], id=0):  Inputs:   fitfun : python script name (without the .py extension) that implements the log-likelihood function.\nThe prototype is: fitfun(x, dim), where  x  is a vector of parameter values and  dim  the number of parameters.  dim : number of parameters  maxstages : maximum number of stages that can be performed by the TMCMC algorithm  popsize : number of samples per stage  lowerbound : lower bound for each parameter  upperbound : uppoer bound for each parameter  id : integer identifier for the specific  tmcmc()  call. The value is appended to the output files generated by the algorithm.   Outputs:   The tmcmc function returns the log-evidence of the model.  In addition, for each stage of the algorithm, the evaluation points and their log-likelihood are stored in text files\nnamed as  curgen_db_xxx_yyy.txt , where  xxx :  id  of the  tmcmc()  call, and  yyy : stage of the algorithm.",
-            "title": "TMCMC"
-        },
-        {
-            "location": "/python/#fitness-function",
-            "text": "The fitness function typically computes the model output and  returns  the log-likelihood of the data.  def fitfun(theta, dim):   theta : parameters of the model  dim : number of parameters",
-            "title": "Fitness function"
-        },
-        {
-            "location": "/python/#plotting",
-            "text": "2D scatter plots of the samples stored in the output text files, colored according to their log-likelihood values,\ncan be produced by means of the  plot_gen()  function.  def plot_gen(filename, dim=2, i=1, j=2, show=1, save=0):   filename : curgen_db_xxx_yyy.txt file  dim : number of parameters  i : i-th parameter  j : j-th parameter  namei : label for the i-th parameter  namej : label for the j-th parameter  show : depict the plot on the screen  save : save the plot in a png file (filename.png)",
-            "title": "Plotting"
-        },
-        {
-            "location": "/python/#example",
-            "text": "",
-            "title": "Example"
-        },
-        {
-            "location": "/python/#demo3py",
-            "text": "# Import necessary modules\nimport sys\nsys.path.append(\"../lib_python\")\nfrom tmcmc import *\nfrom plot_gen import *\n\nlogEv=tmcmc(\"fitfun3\",dim=2,maxstages=20,popsize=4096,lowerbound=[-10,-10],upperbound=[10,10],id=3)\nprint(\"logEv=\",logEv[0])\n\nplot_gen('curgen_db_003_009.txt', dim=2, i=1, j=2, namei='alpha', namej='sigma^2', show=1, save=0)",
-            "title": "demo3.py"
-        },
-        {
-            "location": "/python/#fitfun3py",
-            "text": "# data-driven inference\n# underlying data model: y = ax + e, where\n# a=0.3 and e=N(0,sigma^2), sigma=0.1\n\nimport numpy as np\nimport math\n\ndef fitfun3(theta, dim):\n\n    a = theta[0]\n    sigma = theta[1]\n\n    data = np.loadtxt('data3.txt')\n    N=data.shape[0];\n\n    x = data[:,0]\n    dy = data[:,1]\n\n    y = a*x;\n\n    SSE = np.sum((y-dy)\\*\\*2)\n    sy=sigma;\n    logn = -0.5*N*math.log(2*math.pi)-0.5*N*math.log(sy*sy)-0.5*SSE/(sy*sy)\n\n    return logn",
-            "title": "fitfun3.py"
-        },
-        {
-            "location": "/python/#installation-and-testing",
-            "text": "",
-            "title": "Installation and testing"
-        },
-        {
-            "location": "/python/#prerequisites",
-            "text": "Make sure that the following required software has been installed.   GCC compiler  Python 2.7 (or higher)  Python-devel package  python2-config  or  python3-config  must be available  MacOS: automatically available if python has been installed with brew    Python numpy package  MacOS:  pip2 install numpy  or  pip3 install numpy    Python matplotlib package  MacOS:  pip2 install matplotlib  or  pip3 install matplotlib    GNU GSL library  MacOS:  brew install gsl  We also provide the option to download and use a local copy of the GSL library",
-            "title": "Prerequisites"
-        },
-        {
-            "location": "/python/#installation-steps",
-            "text": "1. Download from GitHub:  git clone https://github.com/cselab/pi4u.git pi4u-tmcmc -b tmcmc  If you do not have git, download  pi4u-tmcmc.zip  from here:  GitHub download link  2. Go to pi4u-tmcmc/src and build the TMCMC library:  cd pi4u-tmcmc/src; make  cd ..   ( go back to the pi4u-tmcmc directory )",
-            "title": "Installation steps"
-        },
-        {
-            "location": "/python/#testing-running-the-demo",
-            "text": "1. Go to pi4u-tmcmc/demo_python and run demo3.py  cd demo_python; python2 demo3.py     2. The scatter plot of samples for our example should be as follows:",
-            "title": "Testing - Running the demo"
-        },
-        {
-            "location": "/python/#troubleshooting-and-additional-options",
-            "text": "",
-            "title": "Troubleshooting and additional options"
-        },
-        {
-            "location": "/python/#how-to-build-the-software-using-a-local-copy-of-the-gsl-library",
-            "text": "1. Go to pi4u-tmcmc/gsl and run build.sh:  cd pi4u-tmcmc/gsl; ./build.sh  cd ..   ( go back to the pi4u-tmcmc directory )  2. Go to pi4u-tmcmc/src and build the TMCMC library:  cd src; make -B mygsl=1",
-            "title": "How to build the software using a local copy of the GSL library"
-        },
-        {
-            "location": "/python/#how-to-build-the-software-using-python3",
-            "text": "1. Go to pi4u-tmcmc/src and (re)-build the TMCMC library:  make -B python3=1  cd ..   ( go back to the pi4u-tmcmc directory )  2. Go to demo_python and run demo3.py using python3  cd demo_python; python3 demo3.py",
-            "title": "How to build the software using python3"
-        },
-        {
-            "location": "/matlab/",
-            "text": "Matlab interface of TMCMC",
-            "title": "Matlab"
-        },
-        {
-            "location": "/matlab/#matlab-interface-of-tmcmc",
-            "text": "",
-            "title": "Matlab interface of TMCMC"
-        },
-        {
-            "location": "/rlib/",
-            "text": "R interface of TMCMC",
-            "title": "R"
-        },
-        {
-            "location": "/rlib/#r-interface-of-tmcmc",
-            "text": "",
-            "title": "R interface of TMCMC"
-        },
-        {
-            "location": "/hpc/",
-            "text": "Software layout\n\n\ntorc_lite    # TORC tasking library\npndl         # Parallel numerical differentation library\nengines/      # UQ + OPT algorithms\n    engine_tmcmc # TMCMC\n    engine_cmaes # CMAES\n    ...          #\nABC_SubSim   # ABC Subset simulation algorithm\nAMaLGaM      # Stochastic optimization algorithm",
-            "title": "C/C++"
-        },
-        {
-            "location": "/hpc/#software-layout",
-            "text": "torc_lite    # TORC tasking library\npndl         # Parallel numerical differentation library\nengines/      # UQ + OPT algorithms\n    engine_tmcmc # TMCMC\n    engine_cmaes # CMAES\n    ...          #\nABC_SubSim   # ABC Subset simulation algorithm\nAMaLGaM      # Stochastic optimization algorithm",
-            "title": "Software layout"
-        },
-        {
-            "location": "/about/",
-            "text": "Pi4U - High Performance UQ+OPT Framework\n\n\nPi4U  is our HPC framework for Bayesian uncertainty quantification of large scale computational models.\n\n\nSoftware\n\n\n\n\nThe latest version of the Pi4U framework can be downloaded from here:\n\npi4u_0.4.1.tar.gz\n (22.03.2016)\n\n\nPrevious public version: \npi4u_0.2.tar.gz\n\n\n\n\nAdditional documentation\n\n\n\n\nTutorial: \npdf\n\n\nPoster about Pi4U: \npdf\n\n\nPresentation at the Europar 2015 conference: \npdf\n\n\n\n\nRelated publications\n\n\nPi4U framework\n\n\n\n\nHadjidoukas P.E., Angelikopoulos P., Papadimitriou C., Koumoutsakos P., Pi4U: A high performance computing framework for Bayesian uncertainty quantification of complex models. J. Comput. Phys., 284:1-21, 2015\n(\ndoi\n,\npdf\n)\n\n\nHadjidoukas P.E., Angelikopoulos P., Kulakova L., Papadimitriou C., Koumoutsakos P., Exploiting Task-Based Parallelism in Bayesian Uncertainty Quantification. EuroPar 2015, LLCS 2015, 9233, 532\n(\ndoi\n,\npdf\n)\n\n\n\n\nApplications\n\n\n\n\n\n\nKulakova L., Angelikopoulos P., Hadjidoukas P. E., Papadimitriou C., Koumoutsakos P., Approximate Bayesian Computation for Granular and Molecular Dynamics Simulations. Proceedings of the Platform for Advanced Scientific Computing Conference PASC'16, 2016\n(\ndoi\n, \npdf\n)\n\n\n\n\n\n\nHadjidoukas P.E, Angelikopoulos P., Rossinelli D., Alexeev D., Papadimitriou C., Koumoutsakos P., Bayesian uncertainty quantification and propagation for discrete element simulations of granular materials. Comput. Methods Appl. Mech. Engrg., 282:218-238, 2014\n(\ndoi\n,\npdf\n)\n\n\n\n\n\n\nTORC: Task-Based Runtime Library\n\n\n\n\nHadjidoukas P.E., Lappas E., Dimakopoulos V.V: A Runtime Library for Platform-Independent Task Parallelism. PDP 2012: 229-236\n(\ndoi\n)",
-            "title": "About"
-        },
-        {
-            "location": "/about/#pi4u-high-performance-uqopt-framework",
-            "text": "Pi4U  is our HPC framework for Bayesian uncertainty quantification of large scale computational models.",
-            "title": "Pi4U - High Performance UQ+OPT Framework"
-        },
-        {
-            "location": "/about/#software",
-            "text": "The latest version of the Pi4U framework can be downloaded from here: pi4u_0.4.1.tar.gz  (22.03.2016)  Previous public version:  pi4u_0.2.tar.gz",
-            "title": "Software"
-        },
-        {
-            "location": "/about/#additional-documentation",
-            "text": "Tutorial:  pdf  Poster about Pi4U:  pdf  Presentation at the Europar 2015 conference:  pdf",
-            "title": "Additional documentation"
-        },
-        {
-            "location": "/about/#related-publications",
-            "text": "",
-            "title": "Related publications"
-        },
-        {
-            "location": "/about/#pi4u-framework",
-            "text": "Hadjidoukas P.E., Angelikopoulos P., Papadimitriou C., Koumoutsakos P., Pi4U: A high performance computing framework for Bayesian uncertainty quantification of complex models. J. Comput. Phys., 284:1-21, 2015\n( doi , pdf )  Hadjidoukas P.E., Angelikopoulos P., Kulakova L., Papadimitriou C., Koumoutsakos P., Exploiting Task-Based Parallelism in Bayesian Uncertainty Quantification. EuroPar 2015, LLCS 2015, 9233, 532\n( doi , pdf )",
-            "title": "Pi4U framework"
-        },
-        {
-            "location": "/about/#applications",
-            "text": "Kulakova L., Angelikopoulos P., Hadjidoukas P. E., Papadimitriou C., Koumoutsakos P., Approximate Bayesian Computation for Granular and Molecular Dynamics Simulations. Proceedings of the Platform for Advanced Scientific Computing Conference PASC'16, 2016\n( doi ,  pdf )    Hadjidoukas P.E, Angelikopoulos P., Rossinelli D., Alexeev D., Papadimitriou C., Koumoutsakos P., Bayesian uncertainty quantification and propagation for discrete element simulations of granular materials. Comput. Methods Appl. Mech. Engrg., 282:218-238, 2014\n( doi , pdf )",
-            "title": "Applications"
-        },
-        {
-            "location": "/about/#torc-task-based-runtime-library",
-            "text": "Hadjidoukas P.E., Lappas E., Dimakopoulos V.V: A Runtime Library for Platform-Independent Task Parallelism. PDP 2012: 229-236\n( doi )",
-            "title": "TORC: Task-Based Runtime Library"
+            "location": "/own_model/#cma-es-implementation",
+            "text": "To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.    [PARAMETERS]\n#defining the parameters for CMA \n\nbounds = 0 10 #upper and lower bound, the parameters must be within these bounds \nx_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)\nsigma_0 = 5 #initial standard deviation  In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5.",
+            "title": "CMA-ES Implementation"
         }
     ]
 }

@@ -3,48 +3,24 @@
 
     
     <url>
-     <loc>None/</loc>
-     <lastmod>2018-03-20</lastmod>
+     <loc>None/README/</loc>
+     <lastmod>2018-03-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/python/</loc>
-     <lastmod>2018-03-20</lastmod>
+     <loc>None/getting_started/</loc>
+     <lastmod>2018-03-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/matlab/</loc>
-     <lastmod>2018-03-20</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/rlib/</loc>
-     <lastmod>2018-03-20</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/hpc/</loc>
-     <lastmod>2018-03-20</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/about/</loc>
-     <lastmod>2018-03-20</lastmod>
+     <loc>None/own_model/</loc>
+     <lastmod>2018-03-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     

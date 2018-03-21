@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>How to implement your own model - Pi4U</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "How to implement your own model";
+    var mkdocs_page_input_path = "own_model.md";
+    var mkdocs_page_url = "/own_model/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../README/" class="icon icon-home"> Pi4U</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../README/">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../getting_started/">Getting started</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">How to implement your own model</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#set-up-own-model">Set up own model</a></li>
+                
+                    <li><a class="toctree-l4" href="#model-function">Model Function</a></li>
+                
+                    <li><a class="toctree-l4" href="#parameters">Parameters</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../README/">Pi4U</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../README/">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>How to implement your own model</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="set-up-own-model">Set up own model</h1>
+<h2 id="model-function">Model Function</h2>
+<p>The example model function is defined as following: </p>
+<p><img alt="equation" src="http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&amp;plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29" /> </p>
+<p>Therefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: </p>
+<pre><code>import math
+
+def model_function(theta, time): #evaluates my model function for a given theta and time
+    return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
+</code></pre>
+
+<p>Both the CMA-ES and the TMCMC implementation call this python function.  </p>
+<h2 id="parameters">Parameters</h2>
+<p>Both CMA-ES and TMCMC enable the user to tweak the algorithms by changing some parameters. We split the parameters in a common_parameters.par, CMA_parameters.par and TMCMC.par file, with the common, the CMA specific and TMCMC specific parameters, respectively. </p>
+<h3 id="common-parameters">Common Parameters</h3>
+<pre><code>[MODEL]
+Number of model parameters = 3
+model file = model_function.py
+data file = data.txt 
+
+[PRIORS]
+# Set prior distribution
+# prior distributions uniform normal
+
+P1 = normal 4 2
+P2 = normal 1 2
+P3 = uniform 0 5
+error_prior = uniform 0 2
+
+[log-likelihood]
+# error either proportional or constant
+error = constant
+</code></pre>
+
+<p><strong>[MODEL]</strong> - The model function comprises three parameters; therefore the number of model parameters was set to three. Additionally, the relative paths to the python model function and to the data file are given. </p>
+<p><strong>[PRIORS]</strong> - In priors you can encode your prior beliefs about the parameters. Follow the following formats:</p>
+<ul>
+<li>normal distributed parameter i: Pi = normal mean variance</li>
+<li>uniformly distributed parameter i: Pi = normal lower_bound upper_bound</li>
+</ul>
+<p>In this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2. </p>
+<p><strong>[log-likelihood]</strong> - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (<img alt="equation" src="http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29" />). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. </p>
+<h3 id="cma-es-implementation">CMA-ES Implementation</h3>
+<p>To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  </p>
+<pre><code>[PARAMETERS]
+#defining the parameters for CMA 
+
+bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
+x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)
+sigma_0 = 5 #initial standard deviation
+</code></pre>
+
+<p>In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../getting_started/" class="btn btn-neutral" title="Getting started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../getting_started/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
