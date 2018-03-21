@@ -1,0 +1,6 @@
+site_name: Pi4U
+pages:
+  - Home: README.md
+  - Getting started: getting_started.md
+  - How to implement your own model: own_model.md
+theme: readthedocs

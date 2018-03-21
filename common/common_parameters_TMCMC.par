@@ -1,11 +1,13 @@
 [MODEL]
+
 Number of model parameters = 3
-model file = model
+model file = model_function.py
 data file = data.txt
 
 [PRIORS]
 # Set prior distribution
 # prior distributions uniform normal
+
 
 P1 = uniform 0 5
 P2 = uniform 0 5
@@ -13,8 +15,8 @@ P3 = uniform 0 5
 error prior = normal 0 1
 
 [log-likelihood]
-# error either proportional or constant
-error = constant
+# d_i = f + (alpha * |f|^gamma + b) * sigma * epsilon
+# with epsilon ~ N(0,1)
 alpha = 0
-beta = 1
+beta  = 1
 gamma = 0

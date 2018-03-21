@@ -10,10 +10,12 @@
 # *
 import argparse
 import sys
+sys.path.insert(0, '../common')
 import numpy as np
 from scipy import optimize, random, stats
 import matplotlib.pyplot as plt
 import re
+from read_in import Parameters
 import argparse
 from math import exp, log
 import configparser
@@ -134,118 +136,6 @@ class RunInfo:
         return None
 
 
-class Parameters:
-    def __init__(self, options):
-        self.options = options
-        self.set_defaults()
-
-    def set_defaults(self):
-        """ Set default values to all member variables """
-
-        # Set default optimization options
-        self.options.MaxIter = 1000
-        self.options.Tol = 1e-10
-        self.options.display = 1
-        self.options.Step = 1e-5
-        self.prior_type = 0     # uniform = 0 , gaussian = 1
-
-    def read_settings(self):
-        """ FILE format
-            pop_size        1000
-            dimension       4
-            bbeta           0.2
-            tol_COV
-
-            P1  lognormal       2   3
-            P2  uniform         0   10  # lower- and upper_bound
-            P3  normal          3   1   #
-            P4  tuncated_normal 3   1        0   2
-
-            BURN
-
-
-            # OPTIONAL
-            seed
-            max__stages
-            """
-        config_common = configparser.ConfigParser()
-        config_tmcmc = configparser.ConfigParser()
-
-        config_common.read("common_parameters.par")
-        config_tmcmc.read("tmcmc.par")
-
-        try:
-            self.dimension = int(config_common['MODEL'][
-                                            'Number of model parameters'])
-            self.model_file = (config_common['MODEL'][
-                                            'model file'])
-            self.data_file = (config_common['MODEL'][
-                                            'data file'])
-            self.alpha = float(config_common['log-likelihood'][
-                                            'alpha'])
-            self.beta = float(config_common['log-likelihood'][
-                                            'beta'])
-            self.gamma = float(config_common['log-likelihood'][
-                                            'gamma'])
-            self.burn_in = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'burn_in'])
-            self.PopSize = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'pop_size'])
-            self.tolCOV = float(config_tmcmc['SIMULATION SETTINGS'][
-                                            'tol_cov'])
-            self.bbeta = float(config_tmcmc['SIMULATION SETTINGS'][
-                                            'bbeta'])
-            self.MaxStages = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'max_stages'])
-            self.seed = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'seed'])
-        except:
-            print("Error occurred while reading configuration parameters. ")
-            raise
-        re_expr = re.compile(
-                "\s[+-]?(?=\d*)(?=\.?\d)\d*\.?\d*(?:[eE][+-]?\d+)?")
-        self.priors = np.full(self.dimension+1, None)
-        for i in range(self.dimension+1):
-                try:
-                    if i < self.dimension:
-                        line = config_common['PRIORS']['P'+str(i+1)]
-                    else:
-                        line = config_common['PRIORS']['error prior']
-                except:
-                    print("P"+str(i+1) + " or error prior was not found"
-                          + " in configuration file.")
-                params = re_expr.findall(line)
-                if (re.match("uniform", line, re.IGNORECASE)) is not None:
-                    self.priors[i] = UniformPrior()
-                    self.priors[i].set_bounds(float(params[0]),
-                                              float(params[1]))
-                elif (re.match("normal", line, re.IGNORECASE)) is not None:
-                    self.priors[i] = NormalPrior()
-                    self.priors[i].set_distribution(float(params[0]),
-                                                    float(params[1]))
-                elif (re.match(
-                            "lognormal", line, re.IGNORECASE)) is not None:
-                    self.priors[i] = LogNormalPrior()
-                    self.priors[i].set_distribution(float(params[0]),
-                                                    float(params[1]))
-                elif (re.match(
-                        "truncated_normal", line, re.IGNORECASE)) is not None:
-                    self.priors[i] = TruncatedNormalPrior()
-                    self.priors[i].set_distribution(float(params[0]),
-                                                    float(params[1]),
-                                                    float(params[2]),
-                                                    float(params[3]))
-                else:
-                    assert False, ("Prior type for P" + str(i+1) +
-                                   " not recognised.")
-        self.error_prior = self.priors[self.dimension]
-        self.priors = np.array(self.priors[0:self.dimension])
-        self.Num = np.full(self.MaxStages, self.PopSize)
-        #self.print_data()
-
-    def print_data(self):
-        print(vars(self))
-        return None
 
 
 def init_chaintask(in_tparam, parameters, curgen_db, loglikelihood):
@@ -521,7 +411,8 @@ def tmcmc():
 
     options = OptimOptions()
     parameters = Parameters(options)
-    parameters.read_settings()
+    parameters.read_settings_common()
+    parameters.read_settings_tmcmc()
     curgen_db = GenerationDB()
     runinfo = RunInfo()
     runinfo.init_runinfo(parameters)

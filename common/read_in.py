@@ -1,6 +1,8 @@
 import configparser
 import numpy as np
 import re
+import sys
+sys.path.insert(0, '../TMCMC')
 from priors import *
 
 
@@ -22,7 +24,7 @@ class Parameters:
     def read_settings_common(self):
         config_common = configparser.ConfigParser()
 
-        config_common.read("common_parameters.par")
+        config_common.read("../common/common_parameters.par")
 
         try:
             self.dimension = int(config_common['MODEL'][
@@ -31,12 +33,21 @@ class Parameters:
                                             'model file'])
             self.data_file = (config_common['MODEL'][
                                             'data file'])
-            self.alpha = float(config_common['log-likelihood'][
-                                            'alpha'])
-            self.beta = float(config_common['log-likelihood'][
-                                            'beta'])
-            self.gamma = float(config_common['log-likelihood'][
-                                            'gamma'])
+#            self.alpha = float(config_common['log-likelihood'][
+#                                            'alpha'])
+#            self.beta = float(config_common['log-likelihood'][
+#                                            'beta'])
+#            self.gamma = float(config_common['log-likelihood'][
+#                                            'gamma'])
+            self.error_type = (config_common['log-likelihood']['error'])
+            if self.error_type == 'constant':
+                self.alpha = 0
+                self.beta = 1
+            elif self.error_type == 'proportional':
+                self.alpha = 1
+                self.beta = 0
+            # else : raise
+            self.gamma = 0
         except:
             print("Error occurred while reading configuration parameters. ")
             raise
@@ -48,7 +59,7 @@ class Parameters:
                     if i < self.dimension:
                         line = config_common['PRIORS']['P'+str(i+1)]
                     else:
-                        line = config_common['PRIORS']['error prior']
+                        line = config_common['PRIORS']['error_prior']
                 except:
                     print("P"+str(i+1) + " or error prior was not found"
                           + " in configuration file.")
@@ -106,7 +117,7 @@ class Parameters:
         print(vars(self))
         return None
 
-def read_CMA(self):
+def read_CMA(num_parameters):
     config_cma_par = configparser.ConfigParser()
     config_cma_par.read('CMA_parameters.par')
 
@@ -121,7 +132,7 @@ def read_CMA(self):
 
     sigma_0 = config_cma_par.get('PARAMETERS', 'sigma_0')
     sigma_0 = float(sigma_0.split(' ')[0])
-    return (x_0, sigma_0)
+    return (x_0, sigma_0, lower_bound, upper_bound)
 
 def read_data(data_filename):
     data_array = np.loadtxt("%s" %data_filename)
@@ -132,7 +143,7 @@ def read_data(data_filename):
 
 def read_in():
     config_common_par = configparser.ConfigParser()
-    config_common_par.read('common_parameters.par')
+    config_common_par.read('../common/common_parameters.par')
 
     num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
 
@@ -189,6 +200,6 @@ def read_in():
     except configparser.NoOptionError:
         print ('error is not defined at all, see section [log-likelihood]')
         raise()
-    (x_0, sigma_0) = read_CMA()
+    (x_0, sigma_0, lower_bound, upper_bound) = read_CMA(num_parameters)
 
     return (x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename)

@@ -9,8 +9,9 @@
 # *  Copyright 2018 ETH Zurich. All rights reserved.
 # *
 
-
-from read_in import read_in 
+import sys
+sys.path.insert(0, '../common')
+from read_in import read_in
 from CMA_method import CMA_method
 
 parameters = read_in()
