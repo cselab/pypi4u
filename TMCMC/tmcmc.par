@@ -3,6 +3,7 @@ pop_size = 2000
 bbeta = 0.04
 tol_COV = 1
 BURN_IN = 2
+
 # max_stages = 100
 #seed = -1
 

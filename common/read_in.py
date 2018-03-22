@@ -25,7 +25,7 @@ class Parameters:
     def read_settings_common(self):
         config_common = configparser.ConfigParser()
 
-        config_common.read("common_parameters.par")
+        config_common.read("../model.par")
 
         try:
             self.dimension = int(config_common['MODEL'][
@@ -95,7 +95,7 @@ class Parameters:
 
     def read_settings_tmcmc(self):
         config_tmcmc = configparser.ConfigParser()
-        config_tmcmc.read("tmcmc_parameters.par")
+        config_tmcmc.read("tmcmc.par")
 
         try:
             self.burn_in = int(config_tmcmc['SIMULATION SETTINGS'][

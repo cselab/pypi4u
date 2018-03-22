@@ -10,8 +10,7 @@
 # *
 import argparse
 import sys
-sys.path.insert(0, '../common')
-sys.path.insert(0, '../')
+sys.path.insert(0, 'common')
 import numpy as np
 from scipy import optimize, random, stats
 import matplotlib.pyplot as plt
