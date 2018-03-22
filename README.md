@@ -93,7 +93,7 @@ MaxIter = 1000
 ```
 
 ### Model Function
-The model function that both implementations call, needs to be defined by the user. It is a python script called, which needs to be located in the main directory. One must not change the name of the function `model_function(theta, time)` and one is not allowed to alter the number of arguments. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
+The model function that both implementations call, needs to be defined by the user. It is a python script, which needs to be located in the main directory. One must not change the name of the function `model_function(theta, time)` and one is not allowed to alter the number of arguments. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
 
 ```
 import math
