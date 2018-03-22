@@ -68,7 +68,6 @@ These specific parameters can be interpreted as following:
 * **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 5, the x_0 should be 2.5 2.5 2.5 2.5. The initial guess for the error is 2.5, based on our prior knowledge.
 * **sigma_0** - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses. 
 
-
 ### TMCMC Parameters
 Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings section of the `tmcmc.par` file.
 
@@ -183,7 +182,7 @@ sigma_0 = 2.5 #initial standard deviation
 
 In this example all parameters lie within the bound [0,5]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 2.5. 
 
-
+### TMCMC Implementation
 
 
 
