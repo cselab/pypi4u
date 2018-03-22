@@ -26,14 +26,16 @@ class UniformPrior():
         """ Sample uniformly from domain [lower_bound, upper_bound]  """
         return uniformrand(self.lower_bound, self.upper_bound)
 
-    def logpriorpdf(self, x=None):
+    def logpriorpdf(self, x):
+        if( x>self.upper_bound or x<self.lower_bound ):
+            return 1e-16
         return -log(self.upper_bound-self.lower_bound)
 
-    def loglikeerror(self, mean, estimator, alpha):
-        if (abs(mean-estimator) < abs(self.upper_bound-self.lower_bound)):
-            return -log(self.upper_bound-self.lower_bound)
-        else:
-            return 0
+    #def loglikeerror(self, mean, estimator, alpha):
+    #    if (abs(mean-estimator) < abs(self.upper_bound-self.lower_bound)):
+    #        return -log(self.upper_bound-self.lower_bound)
+    #    else:
+    #        return 0
 
 class NormalPrior():
     """ Class for dimensions with normal prior. """
@@ -49,12 +51,12 @@ class NormalPrior():
     def logpriorpdf(self, x):
         return stats.lognorm.pdf(x, s=self.sigma, scale=exp(self.mu))
 
-    def loglikeerror(self, mean, estimator, alpha):
-        if alpha == 1:
-            sigma = self.sigma * mean
-        else:
-            sigma = self.sigma
-        return - 0.5 * log(2*np.pi*(sigma)**2) - (mean - estimator)**2 / (2*sigma**2)
+    #def loglikeerror(self, mean, estimator, alpha):
+    #    if alpha == 1:
+    #        sigma = self.sigma * mean
+    #    else:
+    #        sigma = self.sigma
+    #    return - 0.5 * log(2*np.pi*(sigma)**2) - (mean - estimator)**2 / (2*sigma**2)
 
 
 class TruncatedNormalPrior():

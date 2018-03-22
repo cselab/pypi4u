@@ -1,0 +1,6 @@
+__pycache__/
+curgen_db*
+*.swp
+*.dat
+tags
+*.mat

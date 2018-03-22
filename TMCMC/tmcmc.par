@@ -1,8 +1,8 @@
 [SIMULATION SETTINGS]
-pop_size = 2000
-bbeta = 0.04
+pop_size = 5000
+bbeta = 0.02
 tol_COV = 1
-BURN_IN = 2
+BURN_IN = 3
 
 # max_stages = 100
 #seed = -1
