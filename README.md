@@ -39,9 +39,6 @@ error prior = normal 0 1
 [log-likelihood]
 # error either proportional or constant
 error = constant
-alpha = 0
-beta = 1
-gamma = 0
 ```
 
 **[MODEL]** - In the model section the number of model parameters is to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters are the parameters that are to be predicted. For example if the model function is the following: 
@@ -68,7 +65,7 @@ sigma_0 = 2.5 #initial standard deviation
 
 These specific parameters can be interpreted as following:
 * **Bounds** - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
-* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 10, the x_0 should be 5 5 5 5. 
+* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 5, the x_0 should be 2.5 2.5 2.5 1. The initial guess for the error is 1, based on our prior knowledge.
 * **sigma_0** - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses. 
 
 
@@ -126,9 +123,6 @@ error prior = normal 0 1
 [log-likelihood]
 # error either proportional or constant
 error = constant
-alpha = 0
-beta = 1
-gamma = 0
 ```
 **[MODEL]** - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
 
