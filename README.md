@@ -16,8 +16,8 @@ The generated samples can then be used to determine the stochastic mean and vari
 To download the implementations, please visit the github [repository](https://github.com/cselab/pypi4u) and clone it. 
 
 ## Dependencies
-* `python3`.
-* python modules `cma`, `matplotlib` and `scipy`
+* `python3`
+* python modules: `cma`, `matplotlib` and `scipy`
 
 ## How it Works
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
