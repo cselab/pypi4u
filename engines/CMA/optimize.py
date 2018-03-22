@@ -18,6 +18,8 @@ import numpy as np
 import matplotlib
 import cma #import cma package
 import matplotlib.pyplot as plt
+import os
+
 
 def sigma_func(error_type, sigma_estimator, mean): #defining both the proporitonal and constant error
 	if (error_type == 'constant'):
@@ -59,6 +61,8 @@ def maximum_likelihood_func_ln(y, time_mesh, estimators, error_type, prior_set, 
 def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename, model_folder ):
 	es = cma.CMAEvolutionStrategy(x_0, sigma_0, {'bounds': [lower_bound, upper_bound]}) #optim instance is generated with starting point x0 = (0)^T and initial standard deviation sigma0 = 1
 
+	# es.logger.save_to( 'tmp' , switch=True )
+
 	while not es.stop(): #iterate
 		estiomators = es.ask() #ask delivers new candidate estimatior, estimators is a list or array of candidate estimator points
 		es.tell(estiomators, [-1*maximum_likelihood_func_ln(y_data, t_data, estimator, error_type, prior_set,model_filename) for estimator in estiomators]) #tell updates the optim instance by passing the respective function values
@@ -74,3 +78,6 @@ def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound,
 
 
 	matplotlib.pyplot.show('hold')
+
+	str = "mv *.dat " + model_folder + "/."
+	os.system(str)
