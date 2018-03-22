@@ -15,7 +15,6 @@ sys.path.insert(0, '../')
 import numpy as np
 from scipy import optimize, random, stats
 import matplotlib.pyplot as plt
-import re
 from read_in import Parameters
 import argparse
 from math import exp, log
@@ -205,7 +204,7 @@ def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
     if conv == 0:
         method = 'Nelder-Mead'
         options = {
-            'disp': True,
+            'disp': False,
             'maxiter': maxIter,
             'xatol': tol,
             'return_all': True,
@@ -216,13 +215,13 @@ def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
         xmin = res.x
         fmin = res.fun
         conv = res.success
-        print(
-            "fminsearch: conv = " +
-            str(conv) +
-            " xmin = " +
-            str(xmin) +
-            " fmin = " +
-            str(fmin))
+        #print(
+        #    "fminsearch: conv = " +
+        #    str(conv) +
+        #    " xmin = " +
+        #    str(xmin) +
+        #    " fmin = " +
+        #    str(fmin))
 
     j = Gen + 1
 
@@ -257,16 +256,16 @@ def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
     #     print("runinfo_q - normalized weights" + str(q))
 
     runinfo.logselection[Gen] = np.log(sum_weight) + fjmax - np.log(n)
-    if (display):
-        print("logselection \n" + str(logselection[0:Gen+1]))
-        print("\n")
-        print("\n")
+    #if (display):
+    #    print("logselection \n" + str(logselection[0:Gen+1]))
+    #    print("\n")
+    #    print("\n")
     CoefVar[Gen] = np.std(q) / np.mean(q)
 
-    if(display):
-        print("CoefVar  \n" + str(CoefVar[0:Gen+1]))
-        print("\n")
-        print("\n")
+    #if(display):
+    #    print("CoefVar  \n" + str(CoefVar[0:Gen+1]))
+    #    print("\n")
+    #    print("\n")
 
     N = 1
 
@@ -284,8 +283,8 @@ def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
     for i in range(n):
         sel[i] += nn[i]
 
-    if (display):
-        print("SEL = " + str(sel))
+    #if (display):
+    #    print("SEL = " + str(sel))
 
     mean_of_theta = np.zeros(parameters.dimension, dtype=np.float)
     for i in range(parameters.dimension):
@@ -306,8 +305,8 @@ def calculate_statistics(flc, parameters, runinfo, curgen_db, sel):
             runinfo.SS[i][j] = s
             runinfo.SS[j][i] = s
 
-    if (display):
-        print("runinfo.SS = \n" + str(runinfo.SS))
+    #if (display):
+    #    print("runinfo.SS = \n" + str(runinfo.SS))
 
 
 def obj_log_p(x, fj, pj, tol):
@@ -317,11 +316,11 @@ def obj_log_p(x, fj, pj, tol):
     q = np.exp((fj - fjmax) * (x - pj))
     q = q / np.sum(q)
     CoefVar = (np.std(q) / np.mean(q) - tol) ** 2  # result
-    print(
-        "   pj = %.16f" % pj +
-        "   x = %.16f" % x +
-        "   f(x) = %.16f" % CoefVar,
-        "   tol = " + str(tol))
+    #print(
+    #    "   pj = %.16f" % pj +
+    #    "   x = %.16f" % x +
+    #    "   f(x) = %.16f" % CoefVar,
+    #    "   tol = " + str(tol))
     return CoefVar
 
 
@@ -351,11 +350,19 @@ def chaintask(in_tparam, pnsteps, out_tparam, winfo, runinfo, parameters,
         logprior_leader = logpriorpdf(leader, n=parameters.dimension,
                                       parameters=parameters)
         # without exp, with log in logpriorpdf and fitfun
-        L = (logprior_candidate - logprior_leader) + (loglik_candidate -
-                                                      loglik_leader) * pj
+        L = (logprior_candidate - logprior_leader) + (loglik_candidate - loglik_leader) * pj
+        
+        #print( logprior_candidate, logprior_leader, loglik_candidate, loglik_leader )
+        #print(L)
+        #print("---------")
 
-        if (L > 1):
+        if( L < -100 ):
+            L = 0
+        elif( L > 0):
             L = 1
+        else:
+            L = exp( L )
+
 
         if (uniformrand(0, 1) < L):  # Accept candidate with probability L
             leader = candidate
@@ -394,20 +401,17 @@ def propose_candidate(leader, parameters, runinfo):
             bSS[i][j] = parameters.bbeta * runinfo.SS[i][j]
 
     # Generate random numbers until RN inside parameters range
-    while(True):
-        flag = 0
-        candidate = np.random.multivariate_normal(leader, bSS)
-        for i in range(parameters.dimension):
-            assert (np.isnan(candidate[i]) is not False), \
-                     "Nan in candidate point! - Something went wrong!!!!" +\
-                     str(candidate[i])
-# TODO what lower_bound now?
-            if ((candidate[i] < parameters.priors[i].lower_bound) or (
-                    candidate[i] > parameters.priors[i].upper_bound)):
-                flag = 1
-                break
-        if (flag == 0):
-            break
+    #while(True):
+    #    flag = 0
+    candidate = np.random.multivariate_normal(leader, bSS)
+    #    for i in range(parameters.dimension):
+    #        assert (np.isnan(candidate[i]) is not False), "Nan in candidate point! - Something went wrong!!!!" + str(candidate[i])           
+    #        if ((candidate[i] < parameters.priors[i].lower_bound) or (candidate[i] > parameters.priors[i].upper_bound)):
+    #            flag = 1
+    #            break
+    #    if (flag == 0):
+    #        break
+    
     return candidate
 
 
@@ -445,7 +449,7 @@ def tmcmc():
         for d in range(parameters.dimension):
             in_tparam[d] = parameters.priors[d].sample()
         init_chaintask(in_tparam, parameters, curgen_db, loglikelihood)
-    curgen_db.print_size()
+    #curgen_db.print_size()
 
     # dump curgen database for plotting
     dump_curgen_db(runinfo.Gen, parameters, curgen_db)
@@ -459,7 +463,14 @@ def tmcmc():
                              curgen_db=curgen_db, parameters=parameters,
                              runinfo=runinfo)
     runinfo.Gen += 1
+
+
     while runinfo.Gen < parameters.MaxStages:
+
+        print("======================================")
+
+        print("Generation = " + str(runinfo.Gen) + "\np = " + str(runinfo.p[runinfo.Gen]))
+
         for i in range(nchains):
             winfo[0] = runinfo.Gen
             winfo[1] = i
@@ -472,17 +483,16 @@ def tmcmc():
                       out_tparam=out_tparam,
                       winfo=winfo, runinfo=runinfo, parameters=parameters,
                       curgen_db=curgen_db, loglikelihood=loglikelihood)
-        curgen_db.print_size()
+        #curgen_db.print_size()
         dump_curgen_db(runinfo.Gen, parameters, curgen_db)
         nchains = prepare_newgen(nchains, leaders, curgen_db, parameters=parameters,
                                  runinfo=runinfo)
         if runinfo.p[runinfo.Gen] == 1:
-            print("p == 1 - finished")
             break
-        print("Generation = " + str(runinfo.Gen) + " p = " +
-              str(runinfo.p[1:runinfo.Gen+1]))
+
         runinfo.Gen += 1
-    plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
+
+    #plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
 
 
 if __name__ == '__main__':
