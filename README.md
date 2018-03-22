@@ -24,21 +24,24 @@ Both the CMA-ES and TMCMC implementation access a common parameter file, named `
 ```
 [MODEL]
 Number of model parameters = 3
-model file = model_function.py
-data file = data.txt 
+model file = model
+data file = data.txt
 
 [PRIORS]
 # Set prior distribution
 # prior distributions uniform normal
 
-P1 = normal 4 2
-P2 = normal 1 2
+P1 = uniform 0 5
+P2 = uniform 0 5
 P3 = uniform 0 5
-error_prior = uniform 0 2
+error prior = normal 0 1
 
 [log-likelihood]
 # error either proportional or constant
 error = constant
+alpha = 0
+beta = 1
+gamma = 0
 ```
 
 **[MODEL]** - In the model section the number of model parameters is to be defined. The model parameters are the number of unknown parameters in the model function. In other words the model parameters are the parameters that are to be predicted. For example if the model function is the following: 
@@ -56,11 +59,11 @@ Besides setting the common parameters, the user must also define parameters spec
 
 ```
 [PARAMETERS]
-#defining the parameters for CMA 
+#defining the parameters for CMA
 
-bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
-x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)
-sigma_0 = 5 #initial standard deviation
+bounds = 0 5 #upper and lower bound, the parameters must be within these bounds
+x_0 = 2.5 2.5 2.5 1 #starting point (first two elements are theta) and then error
+sigma_0 = 2.5 #initial standard deviation
 ```
 
 These specific parameters can be interpreted as following:
@@ -108,21 +111,24 @@ Consequently, all obtained function evaluations are independently and identicall
 ```
 [MODEL]
 Number of model parameters = 3
-model file = model_function.py
-data file = data.txt 
+model file = model
+data file = data.txt
 
 [PRIORS]
 # Set prior distribution
 # prior distributions uniform normal
 
-P1 = normal 4 2
-P2 = normal 1 2
+P1 = uniform 0 5
+P2 = uniform 0 5
 P3 = uniform 0 5
-error_prior = uniform 0 2
+error prior = normal 0 1
 
 [log-likelihood]
 # error either proportional or constant
 error = constant
+alpha = 0
+beta = 1
+gamma = 0
 ```
 **[MODEL]** - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
 
@@ -150,11 +156,11 @@ To be able to implement the CMA-ES algorithm the CMA parameters must still be de
 
 ```
 [PARAMETERS]
-#defining the parameters for CMA 
+#defining the parameters for CMA
 
-bounds = 0 10 #upper and lower bound, the parameters must be within these bounds 
-x_0 = 5 5 5 5 #starting point, initial guess for the theta vector (the last entry of the vector corresponds to the guess of the error term)
-sigma_0 = 5 #initial standard deviation
+bounds = 0 5 #upper and lower bound, the parameters must be within these bounds
+x_0 = 2.5 2.5 2.5 1 #starting point (first two elements are theta) and then error
+sigma_0 = 2.5 #initial standard deviation
 ```
 
 In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5. 
