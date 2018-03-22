@@ -1,5 +1,5 @@
 # *
-# *  CMA_implementation.py
+# *  CMA.py
 # *  PyPi4U
 # *
 # *  Authors:

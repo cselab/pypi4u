@@ -1,5 +1,5 @@
 # *
-# *  cma_method.py
+# *  optimize.py
 # *  PyPi4U
 # *
 # *  Authors:
