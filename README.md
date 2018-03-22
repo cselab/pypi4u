@@ -70,7 +70,7 @@ These specific parameters can be interpreted as following:
 
 
 ### TMCMC Parameters
-Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC folder) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings folder.
+Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings folder.
 
 ```[SIMULATION SETTINGS]
 pop_size = 2000
@@ -94,7 +94,7 @@ MaxIter = 1000
 ```
 
 ### Model Function
-The model function that both implementations call, needs to be defined by the user. It is a python script called `model_function.py`, which is located in the main directory. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
+The model function that both implementations call, needs to be defined by the user. It is a python script called, which needs to be located in the main directory. One must not change the name of the function `def model_function` and one is not allowed to alter the number of arguments. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
 
 ```
 import math
