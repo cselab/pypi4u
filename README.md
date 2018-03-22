@@ -1,7 +1,7 @@
 # PyPi4u
 
 PyPi4u is inteded to provide the user with easy-to-use uncertainty quantification tools written in Python. 
-It provides a covariance matrix adaptation evolution strategy implementation (CMA-ES) and a transitional markov-chain monte carlo (TMCMC) implementation to perform uncertainty quantification and parameter estimation. The CMA-ES implementation uses the covariance matrix adaptation evolution strategy to determine the maximum of the posterior probability distribution, which is defined as following: 
+It provides a covariance matrix adaptation evolution strategy implementation (CMA-ES) and a transitional markov-chain monte carlo (TMCMC). The TMCMC implementation performs uncertainty quantification and parameter estimation. The CMA-ES implementation uses the covariance matrix adaptation evolution strategy to determine the maximum of the posterior probability distribution, which is defined as following:
 
 ![equation](http://latex.codecogs.com/gif.latex?p%28hypothesis%7Cdata%2CI%29%20%5Cpropto%20p%28data%7Chypothesis%2CI%29%5Ctimes%20p%28hypothesis%7CI%29)
 
