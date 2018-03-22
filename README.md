@@ -19,7 +19,7 @@ To download the implementations, please visit the github [repository](https://gi
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
 ### Common Parameters
-Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par` in the main directory. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
+Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par` found in the main directory. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
 
 ```
 [MODEL]
@@ -49,10 +49,10 @@ The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the parameter file P[number of parameter] = [normal] [mean] [variance] or P[number of parameter] = [uniform] [minimum] [maximum]. The error prior defines the prior knowledge available in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.
 
-**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
+**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *f*, the function value, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?f_i%5Ccdot%20%5Cvarepsilon), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
 
 ### CMA Parameters
-Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `cma.par` file in the CMA folder, are the following: 
+Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `cma.par` file in the CMA directory, are the following: 
 
 ```
 [PARAMETERS]
@@ -70,7 +70,7 @@ These specific parameters can be interpreted as following:
 
 
 ### TMCMC Parameters
-Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings folder.
+Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings section of the `tmcmc.par` file.
 
 ```[SIMULATION SETTINGS]
 pop_size = 2000
@@ -144,7 +144,7 @@ error_prior = uniform 0 5
 # error either proportional or constant
 error = constant
 ```
-**[MODEL]** - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
+**[MODEL]** - The model function consists of three parameters. Therefore the number of model parameters was set to three. Additionally, the names of the  python model function and to the data file are assigned. 
 
 **[PRIORS]** - In this exemplary case, the priors for the first three parameter were taken to be a uniform probability distribution with a minimum of 0 and a maximum of 5. Finally, the error prior was also defined to be a uniform distribution with a minimum of 0 and a maximum of 5. 
 
@@ -164,7 +164,8 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
-Both the CMA-ES and the TMCMC implementation call this python function.  
+Both the CMA-ES and the TMCMC implementation call this python function saved in the main directory. The name of the python function must correspond to that assigned to the variable *model file* in the `the model.par` parameter file. 
+
 ### CMA-ES Implementation
 To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  
 
