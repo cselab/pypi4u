@@ -79,7 +79,8 @@ These specific parameters can be interpreted as following:
 ### TMCMC Parameters
 Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (should be located in the model's directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings section of the `tmcmc.par` file.
 
-```[SIMULATION SETTINGS]
+```
+[SIMULATION SETTINGS]
 pop_size = 2000
 bbeta = 0.04
 tol_COV = 1
