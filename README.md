@@ -106,6 +106,9 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 ### Data File
 The user needs to append a data file, the data file must be located in the main directory. This data file should be a text file that contains two columns, delimited by a space. The first column should be the value of the independent variable [*t*], while the second column should be corresponding function evaluation/measurement [*function evaluation*]. 
 
+### Reading In 
+The `read_in.py` code located in the common directory is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
+
 ### Executing the Code
 After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA.py` or `TMCMC.py`. On execution of `CMA.py` a text file named `CMA_estimators.txt` will be created in the CMA directory, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set. 
 
