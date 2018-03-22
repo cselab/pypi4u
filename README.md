@@ -19,7 +19,7 @@ To download the implementations, please visit the github [repository](https://gi
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
 ### Common Parameters
-Both the CMA-ES and TMCMC implementation access a common parameter file, named `common_parameters.par`. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
+Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par` found in the main directory. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
 
 ```
 [MODEL]
@@ -45,14 +45,14 @@ error = constant
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to path of the python script that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evaluations with noise).
+The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to name of the python script that contains the model function (the model function must be stored in the main directory). Finally, the data file is the name of text file, saved in the main directory, that contains a list of input values and corresponding output values (function evaluations with noise).
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the parameter file P[number of parameter] = [normal] [mean] [variance] or P[number of parameter] = [uniform] [minimum] [maximum]. The error prior defines the prior knowledge available in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.
 
-**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *t*, the independent variable, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Ccdot%20t), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
+**[log-likelihood]** - In this section the error/noise that corrupts the data can be defined. A constant error means that the data is distorted by a constant term ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). In the case of a proportional error, the magnitude of the error also depends on *f*, the function value, as it is defined as ![equation](http://latex.codecogs.com/gif.latex?f_i%5Ccdot%20%5Cvarepsilon), where ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29). 
 
 ### CMA Parameters
-Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `CMA_parameters.par` file, are the following: 
+Besides setting the common parameters, the user must also define parameters specific to the implementation. The CMA parameters, which are stored in `cma.par` file in the CMA directory, are the following: 
 
 ```
 [PARAMETERS]
@@ -68,12 +68,32 @@ These specific parameters can be interpreted as following:
 * **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 5, the x_0 should be 2.5 2.5 2.5 2.5. The initial guess for the error is 2.5, based on our prior knowledge.
 * **sigma_0** - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses. 
 
-
 ### TMCMC Parameters
-Besides the common parameters, also TMCMC requires additional parameters. They are included in the parameter file 'TMCMC.par' and are TMCMC specific parameters such as pop_size, bbeta = 0.04, tol_COV and BURN_IN. Further settings can be changed within the default settings folder.
+Besides the common parameters, also TMCMC requires additional parameters that need to be defined by the user. They are included in the parameter file `tmcmc.par` (located in the TMCMC directory) and are TMCMC specific parameters such as *pop_size, bbeta = 0.04, tol_COV* and *BURN_IN*. Further settings can be changed within the default settings section of the `tmcmc.par` file.
+
+```[SIMULATION SETTINGS]
+pop_size = 2000
+bbeta = 0.04
+tol_COV = 1
+BURN_IN = 2
+
+# max_stages = 100
+#seed = -1
+
+[optimization settings]
+# OPTIONAL
+#max_stages
+
+
+#Either here or in an additional default settings file
+[DEFAULT]
+max_stages = 10000
+seed = -1
+MaxIter = 1000
+```
 
 ### Model Function
-The model function needs to be defined by the user. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
+The model function that both implementations call, needs to be defined by the user. It is a python script, which needs to be located in the main directory. One must not change the name of the function `model_function(theta, time)` and one is not allowed to alter the number of arguments. It is a function that takes two arguments, an estimator vector of a given size (size is defined in common parameters) and *t*, and returns a float. For example: 
 
 ```
 import math
@@ -82,17 +102,19 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
-
 ### Data File
-The user needs to append a data file. This data file should be a text file that contains two columns, delimited by a space. The first column should be the value of the independent variable [*t*], while the second column should be corresponding function evaluation/measurement [*function evaluation*]. 
+The user needs to append a data file, the data file must be located in the main directory. This data file should be a text file that contains two columns, delimited by a space. The first column should be the value of the independent variable [*t*], while the second column should be corresponding function evaluation/measurement [*function evaluation*]. 
+
+### Reading In 
+The `read_in.py` code located in the common directory is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
 
 ### Executing the Code
-After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA_implementation.py` or `TMCMC_implementation.py`. On execution a text file named `CMA_estimators.txt` or `TMCMC_estimators.txt` will be created, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set. 
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA.py` or `TMCMC.py`. On execution of `CMA.py` a text file named `CMA_estimators.txt` will be created in the CMA directory, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set. 
 
 ## Example Problem - DEMO 
 
 ### Generation of Synthetic Data
-Synthetic data was generated from a predefined model function:
+Synthetic data was generated from a predefined model function (see the Synthetic_data folder):
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
@@ -102,7 +124,7 @@ The model parameters were set equal to ![equation](http://latex.codecogs.com/gif
 
 where epsilon equates to ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
 
-Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document `data.txt`, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definition *f* to approximate the values of the thetas and epsilon. 
+Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document `data.txt` in the main directory, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definition *f* to approximate the values of the thetas and epsilon. 
 
 ### Common Parameters
 ```
@@ -124,7 +146,7 @@ error_prior = uniform 0 5
 # error either proportional or constant
 error = constant
 ```
-**[MODEL]** - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
+**[MODEL]** - The model function consists of three parameters. Therefore the number of model parameters was set to three. Additionally, the names of the  python model function and to the data file are assigned. 
 
 **[PRIORS]** - In this exemplary case, the priors for the first three parameter were taken to be a uniform probability distribution with a minimum of 0 and a maximum of 5. Finally, the error prior was also defined to be a uniform distribution with a minimum of 0 and a maximum of 5. 
 
@@ -144,7 +166,8 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
-Both the CMA-ES and the TMCMC implementation call this python function.  
+Both the CMA-ES and the TMCMC implementation call this python function saved in the main directory. The name of the python function must correspond to that assigned to the variable *model file* in the `the model.par` parameter file. 
+
 ### CMA-ES Implementation
 To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  
 
@@ -159,7 +182,7 @@ sigma_0 = 2.5 #initial standard deviation
 
 In this example all parameters lie within the bound [0,5]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 2.5. 
 
-
+### TMCMC Implementation
 
 
 
