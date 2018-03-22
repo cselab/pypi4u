@@ -19,7 +19,6 @@ import matplotlib
 import cma #import cma package
 import matplotlib.pyplot as plt
 
-
 def sigma_func(error_type, sigma_estimator, mean): #defining both the proporitonal and constant error
 	if (error_type == 'constant'):
 		return sigma_estimator
@@ -57,8 +56,9 @@ def maximum_likelihood_func_ln(y, time_mesh, estimators, error_type, prior_set, 
 		likelihood_output = likelihood_output + ln_normal_probability_function(y[i],mean,sigma,theta) + log_total_prior(prior_set, estimators, time_mesh[i])
 	return likelihood_output
 
-def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename):
+def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename, model_folder ):
 	es = cma.CMAEvolutionStrategy(x_0, sigma_0, {'bounds': [lower_bound, upper_bound]}) #optim instance is generated with starting point x0 = (0)^T and initial standard deviation sigma0 = 1
+
 	while not es.stop(): #iterate
 		estiomators = es.ask() #ask delivers new candidate estimatior, estimators is a list or array of candidate estimator points
 		es.tell(estiomators, [-1*maximum_likelihood_func_ln(y_data, t_data, estimator, error_type, prior_set,model_filename) for estimator in estiomators]) #tell updates the optim instance by passing the respective function values
@@ -67,7 +67,7 @@ def CMA_method(x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound,
 
 
 	res = es.result
-	np.savetxt("CMA_estimators.txt", res[0][:], newline='\n')
+	np.savetxt( model_folder+"CMA_estimators.txt", res[0][:], newline='\n')
 
 	es.result_pretty() #print results
 	es.logger.plot() #plots the results

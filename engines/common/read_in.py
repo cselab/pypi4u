@@ -2,6 +2,9 @@ import configparser
 import numpy as np
 import re
 import sys
+
+sys.path.insert(0, './engines/TMCMC')
+
 try:
     from priors import *
 except:
@@ -22,18 +25,16 @@ class Parameters:
         self.options.Step = 1e-5
         self.prior_type = 0     # uniform = 0 , gaussian = 1
 
-    def read_settings_common(self):
+    def read_settings_common(self, model_folder ):
         config_common = configparser.ConfigParser()
 
-        config_common.read("../model.par")
+        config_common.read( model_folder + "model.par" )
 
         try:
-            self.dimension = int(config_common['MODEL'][
-                                            'Number of model parameters'])
-            self.model_file = (config_common['MODEL'][
-                                            'model file'])
-            self.data_file = (config_common['MODEL'][
-                                            'data file'])
+            self.dimension = int(config_common['MODEL']['Number of model parameters'])
+            self.model_file = (config_common['MODEL']['model file'])
+            self.data_file = model_folder + (config_common['MODEL']['data file'])
+
 #            self.alpha = float(config_common['log-likelihood'][
 #                                            'alpha'])
 #            self.beta = float(config_common['log-likelihood'][
@@ -93,9 +94,13 @@ class Parameters:
         self.dimension = self.dimension + 1
         #self.print_data()
 
-    def read_settings_tmcmc(self):
+    
+    
+    
+    def read_settings_tmcmc( self, model_folder ):
+        
         config_tmcmc = configparser.ConfigParser()
-        config_tmcmc.read("tmcmc.par")
+        config_tmcmc.read( model_folder + "tmcmc.par" )
 
         try:
             self.burn_in = int(config_tmcmc['SIMULATION SETTINGS'][
@@ -119,9 +124,9 @@ class Parameters:
         print(vars(self))
         return None
 
-def read_CMA(num_parameters):
+def read_CMA( num_parameters, model_folder ):
     config_cma_par = configparser.ConfigParser()
-    config_cma_par.read('cma.par')
+    config_cma_par.read( model_folder + 'cma.par')
 
     bounds = config_cma_par.get('PARAMETERS', 'bounds')
     lower_bound = float(bounds.split(' ')[0])
@@ -143,16 +148,17 @@ def read_data(data_filename):
     return (t_data, y_data)
 
 
-def read_in():
+def read_in( model_folder ):
+    
     config_common_par = configparser.ConfigParser()
-    config_common_par.read('../model.par')
+    config_common_par.read( model_folder + 'model.par')
 
     num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
 
     model_filename = config_common_par.get('MODEL', 'model file') #reading in the filename of the model function
     model_filename = model_filename.split('.')[0]
 
-    data_filename = config_common_par.get('MODEL', 'data file')
+    data_filename = model_folder + config_common_par.get('MODEL', 'data file')
     (t_data, y_data) = read_data(data_filename)
 
     prior_set = []
@@ -202,6 +208,6 @@ def read_in():
     except configparser.NoOptionError:
         print ('error is not defined at all, see section [log-likelihood]')
         raise()
-    (x_0, sigma_0, lower_bound, upper_bound) = read_CMA(num_parameters)
+    (x_0, sigma_0, lower_bound, upper_bound) = read_CMA( num_parameters, model_folder )
 
     return (x_0, sigma_0, y_data, t_data, error_type, prior_set, lower_bound, upper_bound, model_filename)

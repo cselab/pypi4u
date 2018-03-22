@@ -1,7 +1,7 @@
 [MODEL]
 Number of model parameters = 3
 model file = model_function
-data file = ../data.txt
+data file = data.txt
 
 [PRIORS]
 # Set prior distribution

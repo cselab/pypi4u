@@ -10,8 +10,6 @@
 # *
 import argparse
 import sys
-sys.path.insert(0, '../common')
-sys.path.insert(0, '../')
 import numpy as np
 from scipy import optimize, random, stats
 import matplotlib.pyplot as plt
@@ -77,7 +75,7 @@ class Sort:
 
 
 class GenerationDB:
-    def __init__(self):
+    def __init__( self, model_folder ):
         self.point = None
         self.entry = None
 
@@ -85,6 +83,7 @@ class GenerationDB:
         self.nsel = -1
         self.queue = -1
         self.entries = 0
+        self.save_folder = model_folder
 
     def init(self, parameters):
         self.entry = np.empty(parameters.PopSize + 1, dtype=object)
@@ -95,7 +94,7 @@ class GenerationDB:
 
         pos = self.entries
         self.entries += 1
-        self.entry[pos] = GenerationDB()
+        self.entry[pos] = GenerationDB(self.save_folder)
 
         if (self.entry[pos].point is None):
             self.entry[pos].point = point.copy()
@@ -378,7 +377,7 @@ def chaintask(in_tparam, pnsteps, out_tparam, winfo, runinfo, parameters,
 def dump_curgen_db(Gen, parameters, curgen_db):
     """Print theta and lik to curgen_db_GEN.txt file. This file can be used
         for plotting."""
-    with open("curgen_db_" + "{0:0=3d}".format(Gen) + ".txt", "w") as f:
+    with open( curgen_db.save_folder + "curgen_db_" + "{0:0=3d}".format(Gen) + ".txt", "w") as f:
         for pos in range(curgen_db.entries):
             for i in range(parameters.dimension):
                 f.write(str(curgen_db.entry[pos].point[i]) + " ")
@@ -415,13 +414,13 @@ def propose_candidate(leader, parameters, runinfo):
     return candidate
 
 
-def tmcmc():
+def tmcmc( model_folder ):
 
     options = OptimOptions()
     parameters = Parameters(options)
-    parameters.read_settings_common()
-    parameters.read_settings_tmcmc()
-    curgen_db = GenerationDB()
+    parameters.read_settings_common(model_folder)
+    parameters.read_settings_tmcmc(model_folder)
+    curgen_db = GenerationDB( model_folder )
     runinfo = RunInfo()
     runinfo.init_runinfo(parameters)
 
@@ -456,7 +455,7 @@ def tmcmc():
 
     leaders = np.empty(parameters.PopSize, dtype=object)
     for i in range(parameters.PopSize):
-        leaders[i] = GenerationDB()
+        leaders[i] = GenerationDB(model_folder)
         leaders[i].point = np.empty(parameters.dimension, dtype=np.float)
 
     nchains = prepare_newgen(nchains=nchains, leaders=leaders,
@@ -494,6 +493,3 @@ def tmcmc():
 
     #plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
 
-
-if __name__ == '__main__':
-    tmcmc()

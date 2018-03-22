@@ -1,4 +1,6 @@
-from model_function_data_generation import model_function
+#!/usr/bin/env python
+
+from model_function import model_function
 import numpy as np 
 import math
 

@@ -1,8 +1,8 @@
 [SIMULATION SETTINGS]
-pop_size = 5000	# Population size
-bbeta = 0.02    # Scaling for the global proposal covariance
-tol_COV = 1     # Desired coefficient of variation (=std/mean) of the weights
-BURN_IN = 3     # Burn-in period
+pop_size = 5000	
+bbeta = 0.02    
+tol_COV = 1     
+burn_in = 3     
 
 # max_stages = 100
 #seed = -1
