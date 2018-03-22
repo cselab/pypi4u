@@ -19,7 +19,7 @@ To download the implementations, please visit the github [repository](https://gi
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
 ### Common Parameters
-Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par`. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
+Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par` in the main directory. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
 
 ```
 [MODEL]
@@ -45,7 +45,7 @@ error = constant
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to path of the python script that contains the function definition corresponding to the model function. Finally, the data file is the path to the text file that contains a list of input values and corresponding output values (function evaluations with noise).
+The model parameters would be ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3) and thus the number of model parameters would be 3. The model file should be set equal to name of the python script that contains the model function (the model function must be stored in the main directory). Finally, the data file is the name of text file, saved in the main directory, that contains a list of input values and corresponding output values (function evaluations with noise).
 
 **[PRIORS]** - In this section the user is able to set the prior probability density functions of the estimators. The prior probability distribution functions can either be normal or uniform. They are assigned by writing to the parameter file P[number of parameter] = [normal] [mean] [variance] or P[number of parameter] = [uniform] [minimum] [maximum]. The error prior defines the prior knowledge available in regards to the noise that corrupts the data. Its definition is identical to that of the parameter priors, just that instead of P[number of parameter], the user must now set error_prior equal to a uniform or normal distribution.
 
