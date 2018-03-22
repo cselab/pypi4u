@@ -115,25 +115,27 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 The user needs to provide a data file, the data file must be located in the model directory. This data file should be a text file that contains columns, delimited by a space, where the last column corresponds to the model output and the previous columns correspond to the values of the independent parameters. For example, in the case of a single model parameter, the first column should be the value of the independent variable [*t*], while the second column should be corresponding function evaluation/measurement [*function evaluation*].
 
 ### Reading In 
-The `read_in.py` code located in the common directory is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
+The `read_in.py` code located in the directory `engines/common`. It is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
 
 ### Executing the Code
-After having filled in the parameter files, the estimators for the model parameters are simply obtained by either running `CMA.py` or `TMCMC.py`. On execution of `CMA.py` a text file named `CMA_estimators.txt` will be created in the CMA directory, in which the values of the estimators are stored. The last estimator in the file corresponds to the error estimator. It estimates the variance of the noise, within the data set. 
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by calling `CMA_method` or `tmcmc`.
 
 ## Example Problem - DEMO 
 
 ### Generation of Synthetic Data
-Synthetic data was generated from a predefined model function (see the Synthetic_data folder):
+Synthetic data can be generated from a predefined model function by running the `make_data.py` script (see the `model_1` folder):
 
 ![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
 
-The model parameters were set equal to ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%20%3D%204%2C%20%5Ctheta_2%3D1%2C%20%5Ctheta_3%3D2). The function was then evaluated for ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D). Additionally, random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms 
+The model parameters are set equal to ![equation](http://latex.codecogs.com/gif.latex?%5Ctheta_1%20%3D%204%2C%20%5Ctheta_2%3D1%2C%20%5Ctheta_3%3D2). The function is then evaluated for ![equation](http://latex.codecogs.com/gif.latex?t%20%3D%20%5B0.2%2C%200.4%2C%20%5Chdots%2C%204.0%5D). Additionally, random noise is introduced by simply adding epsilon to the function evaluations (constant error). The sum of the terms forms 
 
 ![equation](http://latex.codecogs.com/gif.latex?y_i%20%3D%20f%28t_i%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29&plus;%5Cvarepsilon)
 
 where epsilon equates to ![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)
 
-Consequently, all obtained function evaluations are independently and identically distributed, following a normal distribution with a variance of one. The synthetic data is stored in a text document `data.txt` in the main directory, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definition *f* to approximate the values of the thetas and epsilon. 
+The synthetic data is stored in a text document `data.txt` in the `model_1` directory, which lists the input value *t* and the corresponding function value *f*. Both approaches use the synthetic data and the function definition *f* to approximate the values of the thetas and epsilon.
+
+The common model parameters are defined inside the file `model.par`, located inside the directory `model_1`.
 
 ### Common Parameters
 ```
@@ -159,14 +161,12 @@ error = constant
 
 **[PRIORS]** - In this exemplary case, the priors for the first three parameter were taken to be a uniform probability distribution with a minimum of 0 and a maximum of 5. Finally, the error prior was also defined to be a uniform distribution with a minimum of 0 and a maximum of 5. 
 
-**[log-likelihood]** - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. 
+**[log-likelihood]** - A likelihood function with constant error is chosen.
 
 ### Model Function - Python Function 
 The model function is defined as following: 
 
-![equation](http://latex.codecogs.com/gif.latex?f%28t%2C%5Ctheta_1%2C%5Ctheta_2%2C%5Ctheta_3%29%3Dt%5Ccdot%5Ctheta_3%5Ccdot%5Ccos%28%5Ctheta_1%5Ccdot%20t%29%20&plus;%20%5Ctheta_2%5Ccdot%5Csin%28t%29) 
-
-Therefore, the first argument of the function, the theta vector, needs to be a vector of size three, as there are three model parameters. The resulting function definition is as following: 
+The function definition is as following: 
 
 ```
 import math
@@ -175,7 +175,7 @@ def model_function(theta, time): #evaluates my model function for a given theta 
 	return time*theta[2]*math.cos(theta[0]*time) + theta[1]*math.sin(time)
 ```
 
-Both the CMA-ES and the TMCMC implementation call this python function saved in the main directory. The name of the python function must correspond to that assigned to the variable *model file* in the `the model.par` parameter file. 
+Both the CMA-ES and the TMCMC implementation call this python function saved in the main directory. The name of the python function must correspond to the name assigned to the variable *model file* inside the `the model.par` parameter file. 
 
 ### CMA-ES Implementation
 To be able to implement the CMA-ES algorithm the CMA parameters must still be defined.  
