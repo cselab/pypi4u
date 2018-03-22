@@ -24,7 +24,7 @@ Both the CMA-ES and TMCMC implementation access a common parameter file, named `
 ```
 [MODEL]
 Number of model parameters = 3
-model file = model
+model file = model_function
 data file = data.txt
 
 [PRIORS]
@@ -34,7 +34,7 @@ data file = data.txt
 P1 = uniform 0 5
 P2 = uniform 0 5
 P3 = uniform 0 5
-error prior = normal 0 1
+error_prior = uniform 0 5
 
 [log-likelihood]
 # error either proportional or constant
@@ -59,13 +59,13 @@ Besides setting the common parameters, the user must also define parameters spec
 #defining the parameters for CMA
 
 bounds = 0 5 #upper and lower bound, the parameters must be within these bounds
-x_0 = 2.5 2.5 2.5 1 #starting point (first two elements are theta) and then error
+x_0 = 2.5 2.5 2.5 2.5 #starting point (first two elements are theta) and then error
 sigma_0 = 2.5 #initial standard deviation
 ```
 
 These specific parameters can be interpreted as following:
 * **Bounds** - defines the lower and upper bound of the estimators. The values of all of the estimated parameters are restricted to this bound. The larger the bound the longer it will take for the CMA-ES algorithm to find the maximum of the posterior probability function. 
-* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 5, the x_0 should be 2.5 2.5 2.5 1. The initial guess for the error is 1, based on our prior knowledge.
+* **x_0** - this is a vector containing the initial guesses of the estimators. The vector size exceeds the number of model parameters by one. The variance introduced by the noise (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%5Csim%20%5Cmathcal%7BN%7D%280%2C%5C%2C%5Csigma%5E%7B2%7D%29)) is also an unknown that has to be predicted. It forms the last entry of theta vector. x_0 represents the starting point of the CMA-ES algorithm. Ultimately, the algorithm evolves from this guess towards the most-likely estimators. A rule of thumb is that the initial guesses should be in the middle of bound. If the lower bound is 0 and the upper bound is 5, the x_0 should be 2.5 2.5 2.5 2.5. The initial guess for the error is 2.5, based on our prior knowledge.
 * **sigma_0** - defines the initial standard deviation used by CMA-ES algorithm when making its initial guesses. 
 
 
@@ -108,7 +108,7 @@ Consequently, all obtained function evaluations are independently and identicall
 ```
 [MODEL]
 Number of model parameters = 3
-model file = model
+model file = model_function
 data file = data.txt
 
 [PRIORS]
@@ -118,7 +118,7 @@ data file = data.txt
 P1 = uniform 0 5
 P2 = uniform 0 5
 P3 = uniform 0 5
-error prior = normal 0 1
+error_prior = uniform 0 5
 
 [log-likelihood]
 # error either proportional or constant
@@ -126,7 +126,7 @@ error = constant
 ```
 **[MODEL]** - The model function consists of three parameters; therefore the number of model parameters was set to three. Additionally, the paths to the python model function and to the data file are given. 
 
-**[PRIORS]** - In this exemplary case, the prior for the first parameter was taken to be a normal probability distribution with a mean of 4 and a variance of 2. The prior of the second parameter is also a normal probability distribution, but with a mean of 1 and a variance of 2. The third prior was set to a uniform probability distribution with a minimum of 0 and maximum of 5. Finally, the error prior was defined to be a uniform distribution with a minimum of 0 and maximum of 2. 
+**[PRIORS]** - In this exemplary case, the priors for the first three parameter were taken to be a uniform probability distribution with a minimum of 0 and a maximum of 5. Finally, the error prior was also defined to be a uniform distribution with a minimum of 0 and a maximum of 5. 
 
 **[log-likelihood]** - The synthetic data was produced by corrupting the function evaluations with constant noise, which originated from a normal distribution with a mean of 0 and a variance of 1 (![equation](http://latex.codecogs.com/gif.latex?%5Cvarepsilon%20%5Csim%20%5Cmathcal%7BN%7D%28%5C0%2C1%29)). Therefore, the error is set equal to a constant in the log-likelihood section of the common parameters. 
 
@@ -153,11 +153,11 @@ To be able to implement the CMA-ES algorithm the CMA parameters must still be de
 #defining the parameters for CMA
 
 bounds = 0 5 #upper and lower bound, the parameters must be within these bounds
-x_0 = 2.5 2.5 2.5 1 #starting point (first two elements are theta) and then error
+x_0 = 2.5 2.5 2.5 2.5 #starting point (first two elements are theta) and then error
 sigma_0 = 2.5 #initial standard deviation
 ```
 
-In this example all parameters lie within the bound [0,10]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 5. 
+In this example all parameters lie within the bound [0,5]. Furthermore, the rule of thumb is applied to obtain an initial starting guess for the theta vector. Finally, the initial standard deviation of the CMA-ES alogrithm was defined to be 2.5. 
 
 
 
