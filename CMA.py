@@ -10,8 +10,9 @@
 # *
 
 import sys
-sys.path.insert(0, '../common')
+sys.path.insert(0, 'common')
 from read_in import read_in
+sys.path.insert(0, 'CMA_Implementation')
 from CMA_method import CMA_method
 
 parameters = read_in()

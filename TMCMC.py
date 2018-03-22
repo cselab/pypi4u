@@ -10,7 +10,7 @@
 # *
 import argparse
 import sys
-sys.path.insert(0, '../common')
+sys.path.insert(0, 'common')
 import numpy as np
 from scipy import optimize, random, stats
 import matplotlib.pyplot as plt
@@ -20,7 +20,9 @@ import argparse
 from math import exp, log
 import configparser
 from importlib import import_module
+sys.path.insert(0, 'TMCMC')
 from priors import *
+from plotting import plot_theta
 from random_auxiliary import *
 
 
@@ -31,6 +33,7 @@ class LogLikelihood:
         self.alpha = parameters.alpha
         self.beta = parameters.beta
         self.gamma = parameters.gamma
+        self.parameters = parameters
 
         # Load model function
         try:
@@ -49,6 +52,7 @@ class LogLikelihood:
 
     def __call__(self, model_params):
         sum = 0
+        self.sigma = model_params[self.parameters.dimension-1]
         volatility = (self.beta * self.sigma)**2
 
         for t in range(len(self.data)):
@@ -478,6 +482,7 @@ def tmcmc():
         print("Generation = " + str(runinfo.Gen) + " p = " +
               str(runinfo.p[1:runinfo.Gen+1]))
         runinfo.Gen += 1
+    plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
 
 
 if __name__ == '__main__':

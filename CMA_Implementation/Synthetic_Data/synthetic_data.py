@@ -13,8 +13,7 @@ def synthetic_data(time_mesh, theta_0, sigma_0): #creating synthetic data from m
 
 theta_0 = [4,1,2]
 sigma_0 = 1 #defining sigma (adds white noise to my synthetic data)
-time_mesh = np.arange(0.2, 4, 0.2)
-print time_mesh
+time_mesh = np.arange(0.2, 4, 0.1)
 
 y = synthetic_data(time_mesh, theta_0, sigma_0) 
 

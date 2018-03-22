@@ -10,7 +10,7 @@
 # *
 
 import sys
-sys.path.insert(0, '../common')
+sys.path.insert(0, '..')
 import configparser
 import importlib
 import math

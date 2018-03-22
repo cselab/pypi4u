@@ -1,0 +1,6 @@
+[PARAMETERS]
+#defining the parameters for CMA 
+
+bounds = 0 5 #upper and lower bound, the parameters must be within these bounds 
+x_0 = 2.5 2.5 2.5 1 #starting point (first two elements are theta) and then error
+sigma_0 = 2.5 #initial standard deviation

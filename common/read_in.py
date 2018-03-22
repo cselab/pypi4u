@@ -2,7 +2,7 @@ import configparser
 import numpy as np
 import re
 import sys
-sys.path.insert(0, '../TMCMC')
+sys.path.insert(0, 'TMCMC')
 from priors import *
 
 
@@ -24,7 +24,7 @@ class Parameters:
     def read_settings_common(self):
         config_common = configparser.ConfigParser()
 
-        config_common.read("../common/common_parameters.par")
+        config_common.read("common_parameters.par")
 
         try:
             self.dimension = int(config_common['MODEL'][
@@ -88,12 +88,13 @@ class Parameters:
                     assert False, ("Prior type for P" + str(i+1) +
                                    " not recognised.")
         self.error_prior = self.priors[self.dimension]
-        self.priors = np.array(self.priors[0:self.dimension])
+        self.priors = np.array(self.priors)
+        self.dimension = self.dimension + 1
         #self.print_data()
 
     def read_settings_tmcmc(self):
         config_tmcmc = configparser.ConfigParser()
-        config_tmcmc.read("tmcmc.par")
+        config_tmcmc.read("tmcmc_parameters.par")
 
         try:
             self.burn_in = int(config_tmcmc['SIMULATION SETTINGS'][
@@ -143,7 +144,7 @@ def read_data(data_filename):
 
 def read_in():
     config_common_par = configparser.ConfigParser()
-    config_common_par.read('../common/common_parameters.par')
+    config_common_par.read('common_parameters.par')
 
     num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
 
