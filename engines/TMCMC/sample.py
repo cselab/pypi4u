@@ -491,5 +491,5 @@ def tmcmc( model_folder ):
 
         runinfo.Gen += 1
 
-    #plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
+    plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
 
