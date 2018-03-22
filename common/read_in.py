@@ -2,9 +2,10 @@ import configparser
 import numpy as np
 import re
 import sys
-sys.path.insert(0, 'TMCMC')
-from priors import *
-
+try:
+    from priors import *
+except:
+    pass
 
 class Parameters:
     def __init__(self, options):
@@ -120,7 +121,7 @@ class Parameters:
 
 def read_CMA(num_parameters):
     config_cma_par = configparser.ConfigParser()
-    config_cma_par.read('CMA_parameters.par')
+    config_cma_par.read('cma.par')
 
     bounds = config_cma_par.get('PARAMETERS', 'bounds')
     lower_bound = float(bounds.split(' ')[0])
@@ -144,7 +145,7 @@ def read_data(data_filename):
 
 def read_in():
     config_common_par = configparser.ConfigParser()
-    config_common_par.read('common_parameters.par')
+    config_common_par.read('../model.par')
 
     num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
 

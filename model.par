@@ -10,7 +10,7 @@ data file = data.txt
 P1 = uniform 0 5
 P2 = uniform 0 5
 P3 = uniform 0 5
-error_prior = normal 0 1
+error_prior = uniform 0 5
 
 [log-likelihood]
 # error either proportional or constant
