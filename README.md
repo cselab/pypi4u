@@ -7,7 +7,7 @@ It provides a covariance matrix adaptation evolution strategy implementation (CM
 
 The TMCMC algorithm avoids difficulties in sampling directly from the target posterior probability distribution by sampling from a series of intermediate probability distributions. This annealing process can be denoted by 
 
-![equation](http://latex.codecogs.com/gif.latex?p_j%28hypothesis%29%20%5Csim%20p%28data%20%7C%20hypothesis%2C%20I%29%5E%7B%5Crho_j%7D%20p%28hypothesis%20%7C%20I%29)
+![equation](http://latex.codecogs.com/gif.latex?p_j%28hypothesis%7C%20data%29%20%5Csim%20p%28data%20%7C%20hypothesis%2C%20I%29%5E%7B%5Crho_j%7D%20p%28hypothesis%20%7C%20I%29)
 
 
 The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators given the data. 
