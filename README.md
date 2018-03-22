@@ -7,7 +7,7 @@ It provides a covariance matrix adaptation evolution strategy implementation (CM
 
 The TMCMC algorithm avoids difficulties in sampling directly from the target posterior probability distribution by sampling from a series of intermediate probability distributions. This annealing process can be denoted by 
 
-* INSERT FORMULA
+![equation](http://latex.codecogs.com/gif.latex?p_j%28%5Cboldsymbol%5Ctheta%29%20%5Csim%20p%28%5Cboldsymbol%7Bd%7D%20%7C%20%5Cboldsymbol%20%5Ctheta%2C%20M%29%5E%7B%5Crho_j%7D%20p%28%5Cboldsymbol%20%5Ctheta%20%7C%20M%29)
 
 
 The generated samples can then be used to determine the stochastic mean and variance. The stochastic mean of the multivariate distribution can be equated to the most-likely parameters/estimators given the data. 
@@ -184,7 +184,18 @@ In this example all parameters lie within the bound [0,5]. Furthermore, the rule
 
 ### TMCMC Implementation
 
+To run the TMCMC algorithm, you need to define the TMCMC parameters in the tmcmc.par file.  
 
+
+```
+[SIMULATION SETTINGS]
+pop_size = 2000	# Population size
+bbeta = 0.04    # Scaling for the global proposal covariance
+tol_COV = 1     # Desired coefficient of variation (=std/mean) of the weights
+BURN_IN = 2     # Burn in period
+```
+
+In this example the population size is set to 2000, the scaling for the global proposal covariance bbeta = 0.04, the desired coefficient of variation of the weights tol_COV = 1 and two burn in periods.
 
 
 
