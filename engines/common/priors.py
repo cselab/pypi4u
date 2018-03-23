@@ -28,7 +28,7 @@ class UniformPrior():
 
     def logpriorpdf(self, x):
         if( x>self.upper_bound or x<self.lower_bound ):
-            return 1e-16
+            return -1e16
         return -log(self.upper_bound-self.lower_bound)
 
     #def loglikeerror(self, mean, estimator, alpha):
@@ -49,7 +49,8 @@ class NormalPrior():
         return random.normal(self.mu, self.sigma, 1)
 
     def logpriorpdf(self, x):
-        return stats.lognorm.pdf(x, s=self.sigma, scale=exp(self.mu))
+        return log( stats.norm.pdf(x, loc=self.mu, scale=self.sigma ) )
+        #return stats.lognorm.pdf(x, s=self.sigma, scale=exp(self.mu))
 
     #def loglikeerror(self, mean, estimator, alpha):
     #    if alpha == 1:

@@ -49,6 +49,7 @@ class NormalPrior():
         return random.normal(self.mu, self.sigma, 1)
 
     def logpriorpdf(self, x):
+        return log( stats.norm.pdf(x, loc=self.mu, scale=self.sigma ) ) 
         return stats.lognorm.pdf(x, s=self.sigma, scale=exp(self.mu))
 
     #def loglikeerror(self, mean, estimator, alpha):

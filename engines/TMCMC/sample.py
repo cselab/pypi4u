@@ -23,7 +23,6 @@ from priors import *
 from plotting import plot_theta
 from random_auxiliary import *
 
-
 class LogLikelihood:
     """ """
     def __init__(self, model_function, data_file, parameters):
@@ -344,16 +343,10 @@ def chaintask(in_tparam, pnsteps, out_tparam, winfo, runinfo, parameters,
         candidate = propose_candidate(leader, parameters, runinfo)
         loglik_candidate = loglikelihood(candidate)
 
-        logprior_candidate = logpriorpdf(candidate, n=parameters.dimension,
-                                         parameters=parameters)
-        logprior_leader = logpriorpdf(leader, n=parameters.dimension,
-                                      parameters=parameters)
-        # without exp, with log in logpriorpdf and fitfun
-        L = (logprior_candidate - logprior_leader) + (loglik_candidate - loglik_leader) * pj
+        logprior_candidate = logpriorpdf(candidate, n=parameters.dimension,parameters=parameters)
+        logprior_leader    = logpriorpdf(leader,    n=parameters.dimension,parameters=parameters)
         
-        #print( logprior_candidate, logprior_leader, loglik_candidate, loglik_leader )
-        #print(L)
-        #print("---------")
+        L = (logprior_candidate - logprior_leader) + (loglik_candidate - loglik_leader) * pj
 
         if( L < -100 ):
             L = 0
@@ -491,5 +484,5 @@ def tmcmc( model_folder ):
 
         runinfo.Gen += 1
 
-    plot_theta("curgen_db_" + "{0:0=3d}".format(runinfo.Gen-1) + ".txt", False)
+    plot_theta( model_folder + "curgen_db_" + "{0:0=3d}".format(runinfo.Gen) + ".txt", False)
 
