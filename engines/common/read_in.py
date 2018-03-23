@@ -125,21 +125,29 @@ class Parameters:
         return None
 
 def read_CMA( num_parameters, model_folder ):
+    
+    x_0 = np.zeros(num_parameters+1)
+
     config_cma_par = configparser.ConfigParser()
     config_cma_par.read( model_folder + 'cma.par')
-
+    
     bounds = config_cma_par.get('PARAMETERS', 'bounds')
-    lower_bound = float(bounds.split(' ')[0])
-    upper_bound = float(bounds.split(' ')[1])
+    tmp = re.split(r'\s*', bounds );
+    lower_bound = float( tmp[0] )
+    upper_bound = float( tmp[1] )
 
     x_loading = config_cma_par.get('PARAMETERS', 'x_0')
-    x_0 = np.zeros(num_parameters+1)
+    tmp = re.split(r'\s*',x_loading);
     for i in range(num_parameters+1):
-        x_0[i] = float(x_loading.split(' ')[i])
+        x_0[i] = float( tmp[i] )
 
     sigma_0 = config_cma_par.get('PARAMETERS', 'sigma_0')
-    sigma_0 = float(sigma_0.split(' ')[0])
+    tmp = re.split(r'\s*', sigma_0 );
+    sigma_0 = float( tmp[0] )
     return (x_0, sigma_0, lower_bound, upper_bound)
+
+
+
 
 def read_data(data_filename):
     data_array = np.loadtxt("%s" %data_filename)
@@ -153,19 +161,23 @@ def read_in( model_folder ):
     config_common_par = configparser.ConfigParser()
     config_common_par.read( model_folder + 'model.par')
 
-    num_parameters = config_common_par.getint('MODEL', 'Number of model parameters') #reading in the number of parameters that the model function has
+    tmp = config_common_par.get('MODEL', 'Number of model parameters') 
+    tmp = re.split(r'\s*', tmp );
+    num_parameters = int(tmp[0])
 
-    model_filename = config_common_par.get('MODEL', 'model file') #reading in the filename of the model function
-    model_filename = model_filename.split('.')[0]
+    tmp = config_common_par.get('MODEL', 'model file') 
+    tmp = re.split(r'\s*', tmp );
+    model_filename = tmp[0]
 
-    data_filename = model_folder + config_common_par.get('MODEL', 'data file')
+    tmp = model_folder + config_common_par.get('MODEL', 'data file')
+    data_filename = re.split(r'\s*', tmp )[0];
     (t_data, y_data) = read_data(data_filename)
 
     prior_set = []
     for i in range(num_parameters):
         try:
-            prior = config_common_par.get('PRIORS', 'P%s' %(i+1))
-            prior = prior.split(' ')
+            tmp = config_common_par.get('PRIORS', 'P%s' %(i+1))
+            prior = re.split(r'\s*', tmp );
             if prior[0] == 'uniform':
                 uni_lower = float(prior[1])
                 uni_upper = float(prior[2])
@@ -182,8 +194,8 @@ def read_in( model_folder ):
             raise()
 
     try:
-        error_prior = config_common_par.get('PRIORS', 'error_prior')
-        error_prior = error_prior.split(' ')
+        tmp = config_common_par.get('PRIORS', 'error_prior')
+        error_prior = re.split(r'\s*', tmp );
         if error_prior[0] == 'uniform':
             uni_lower = float(error_prior[1])
             uni_upper = float(error_prior[2])
@@ -201,7 +213,8 @@ def read_in( model_folder ):
 
     error_types = ['proportional', 'constant']
     try:
-        error_type = config_common_par.get('log-likelihood', 'error')
+        tmp = config_common_par.get('log-likelihood', 'error')
+        error_type = re.split(r'\s*', tmp )[0];
         if(error_type not in error_types):
             print ("unknown error type: " + error_type)
             raise()
