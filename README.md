@@ -22,6 +22,9 @@ To download the implementations, please visit the github [repository](https://gi
 ## How it Works
 The following section explains the project's underlying structure and how the provided code can be used to make estimations of the model parameters. This explanation is further supported by a proceeding example, which illustrates how the scripts can be implemented.
 
+### Structure 
+The project is structured into a main directory, a model directory model_1 and an engines directory. The main directory contains the `run.py` script, which on execution either runs the CMA or TMCMC implementation. The `run.py` script accesses the engines folder, which contains the CMA, TMCMC and the read in code. The model folder is problem specific, as it contains all of the parameter files and the model function code that define the problem. The model folder should be altered by the user to their specific needs. 
+
 ### Common Parameters
 Both the CMA-ES and TMCMC implementation access a common parameter file, named `model.par` found in the model's directory. The common parameter file, which needs to be filled out by the user, defines the problem and therefore forms the project's foundation. The structure of the common parameter file is depicted below. It consists of three sections; the model, priors and log-likelihood. 
 
@@ -122,7 +125,7 @@ The user needs to provide a data file, the data file must be located in the mode
 The `read_in.py` code located in the directory `engines/common`. It is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
 
 ### Executing the Code
-After having filled in the parameter files, the estimators for the model parameters are simply obtained by calling `CMA_method` or `tmcmc`.
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by calling `CMA_method` or `tmcmc` from `run.py` which is located in the main directory. The user must update the path of the model folder, the folder that contains all of the parameters and the specific model function, in `run.py`.
 
 ## Example Problem - DEMO 
 
