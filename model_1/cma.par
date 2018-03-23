@@ -1,7 +1,7 @@
 [PARAMETERS]
 #defining the parameters for CMA
 
-bounds =   0   10 
+bounds =   0   5
 x_0 =  2.5  2.5  2.5   2.5
 
 sigma_0 =   2.5
