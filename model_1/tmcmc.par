@@ -11,13 +11,9 @@ burn_in = 3
 
 
 
-
-
-
-
 #Either here or in an additional default settings file
 
 [DEFAULT]
 max_stages = 10000    
-seed = -1   #asdvj a flihbqfl b
+seed = -1   
 MaxIter = 1000
