@@ -103,18 +103,25 @@ class Parameters:
         config_tmcmc.read( model_folder + "tmcmc.par" )
 
         try:
-            self.burn_in = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'burn_in'])
-            self.PopSize = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'pop_size'])
-            self.tolCOV = float(config_tmcmc['SIMULATION SETTINGS'][
-                                            'tol_cov'])
-            self.bbeta = float(config_tmcmc['SIMULATION SETTINGS'][
-                                            'bbeta'])
-            self.MaxStages = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'max_stages'])
-            self.seed = int(config_tmcmc['SIMULATION SETTINGS'][
-                                            'seed'])
+
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['burn_in'] )
+            self.burn_in = int( tmp[0] )
+
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['pop_size'])
+            self.PopSize = int(tmp[0])
+            
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['tol_cov'])
+            self.tolCOV = float(tmp[0])
+            
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['bbeta'])
+            self.bbeta = float(tmp[0])
+            
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['max_stages'])
+            self.MaxStages = int(tmp[0])
+            
+            tmp = re.split(r'\s*', config_tmcmc['SIMULATION SETTINGS']['seed'])
+            self.seed = int(tmp[0])
+
         except:
             print("Error occurred while reading configuration parameters. ")
             raise

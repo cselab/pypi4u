@@ -3,14 +3,18 @@ Number of model parameters = 3
 model file = model_function
 data file = data.txt
 
-[PRIORS]
-# Set prior distribution
-# prior distributions uniform normal
 
-P1 = uniform 0 5
-P2 = uniform 0 5
-P3 = uniform 0 5
+
+
+[PRIORS]
+# Set prior distribution. prior distributions uniform normal
+
+P1 = uniform   0  5
+P2 = uniform   0  5
+P3 = uniform   0  5
 error_prior = uniform 0 5
+
+
 
 [log-likelihood]
 # error either proportional or constant
