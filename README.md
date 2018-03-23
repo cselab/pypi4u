@@ -122,7 +122,7 @@ The user needs to provide a data file, the data file must be located in the mode
 The `read_in.py` code located in the directory `engines/common`. It is a python class that access all parameter files: `model.par`, `cma.par` and `tmcmc.par`. This class is called by both the CMA and TMCMC optimizer, as it passes the information stored in the respective parameter files to the implementation. Therefore, it functions as a parser, which reads the parameter files. 
 
 ### Executing the Code
-After having filled in the parameter files, the estimators for the model parameters are simply obtained by calling `CMA_method` or `tmcmc`.
+After having filled in the parameter files, the estimators for the model parameters are simply obtained by calling `CMA_method` or `tmcmc` from `run.py` which is located in the main directory. The to update the path of the model folder, the folder that contains all of the parameters and the specific model function, in `run.py`.
 
 ## Example Problem - DEMO 
 
