@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 # *
-# *  CMA.py
+# *  run.py
 # *  PyPi4U
 # *
 # *  Authors:
 # *     Paul Aurel Diederichs  - daurel@ethz.ch
+# *     Philipp Mueller  - muellphi@ethz.ch
 # *     Georgios Arampatzis - arampatzis@collegium.ethz.ch
-# *     Panagiotis Chatzidoukas
+# *
 # *  Copyright 2018 ETH Zurich. All rights reserved.
 # *
 
@@ -27,10 +28,14 @@ from sample import tmcmc
 
 model_folder = "model_1/"
 
-#parameters = read_in( model_folder )
-#sys.path.insert(0, model_folder )
-#CMA_method(*parameters, model_folder)
-
-
+parameters = read_in( model_folder )
 sys.path.insert(0, model_folder )
-tmcmc( model_folder )
+CMA_method(*parameters, model_folder)
+
+
+#sys.path.insert(0, model_folder )
+#tmcmc( model_folder )
+
+
+
+
